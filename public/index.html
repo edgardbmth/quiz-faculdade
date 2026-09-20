@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Trivia Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="container">
+        
+        <!-- TELA 1: INÍCIO (LOGIN) -->
+        <!-- RQ01: Identificação do jogador -->
+        <section id="tela-inicio">
+    <h1>TECH TRIVIA</h1>
+    <p>Fatos estranhos, curiosos e surpreendentes da tecnologia.<br>
+       Digite seu nome e mostre o que você sabe!</p>
+    
+    <form id="form-login">
+        <label for="nome-jogador">Nome do Jogador</label>
+        <input type="text" id="nome-jogador" placeholder="Ex: Aline Santos" required autocomplete="off">
+        <button type="submit" id="btn-iniciar">Começar o Desafio</button>
+    </form>
+</section>
+
+        <!-- TELA 2: O JOGO (PERGUNTAS E RESPOSTAS) -->
+        <!-- RQ02: Uma pergunta por vez -->
+        <section id="tela-jogo" class="oculto">
+            <header class="status-quiz">
+                <!-- Barra de progresso para o usuário se localizar -->
+                <div class="progresso-container">
+                    <div id="barra-progresso"></div>
+                </div>
+                <span id="num-pergunta">Pergunta 1 de 5</span>
+            </header>
+
+            <article class="card-pergunta">
+                <span id="categoria-pergunta" class="badge">Categoria</span>
+                <h2 id="texto-pergunta">Aqui vai o texto da pergunta carregado pelo JavaScript?</h2>
+                
+                <!-- Botões das alternativas -->
+                <div id="opcoes-resposta" class="lista-opcoes">
+                    <button class="opcao" data-index="0">Alternativa A</button>
+                    <button class="opcao" data-index="1">Alternativa B</button>
+                    <button class="opcao" data-index="2">Alternativa C</button>
+                    <button class="opcao" data-index="3">Alternativa D</button>
+                </div>
+            </article>
+
+            <!-- ÁREA DE FEEDBACK (Inicia oculta, aparece após o clique) -->
+            <!-- RQ07: Justificativa com link/fonte -->
+            <section id="feedback-resposta" class="oculto">
+                <div class="resultado-status">
+                    <!-- RNF08: Acessibilidade - Texto + Cor para indicar erro/acerto -->
+                    <p id="feedback-titulo"><strong>Resposta Correta!</strong></p>
+                </div>
+                <p id="feedback-explicacao">Texto explicativo explicando o porquê dessa resposta estar certa ou errada.</p>
+                <a id="feedback-fonte" href="#" target="_blank">Saiba mais na fonte oficial</a>
+                
+                <button id="btn-proxima">Próxima Pergunta</button>
+            </section>
+        </section>
+
+        <!-- TELA 3: FINAL (RANKING E REINÍCIO) -->
+        <!-- RQ03, RQ04 e RQ05: Pontuação, Ranking e Reinício -->
+        <section id="tela-final" class="oculto">
+            <h1>Quiz Concluído!</h1>
+            <p id="pontuacao-final">Você acertou X de Y perguntas.</p>
+
+            <section class="ranking-container">
+                <h2>🏆 Ranking da Sessão</h2>
+                <table id="tabela-ranking">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Jogador</th>
+                            <th>Pontuação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpo-ranking">
+                        <!-- Linhas geradas dinamicamente pelo JavaScript (Session Storage) -->
+                    </tbody>
+                </table>
+            </section>
+
+            <button id="btn-reiniciar">Jogar Novamente</button>
+        </section>
+
+    </main>
+
+    <!-- Link para a lógica do JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>

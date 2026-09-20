@@ -1,0 +1,487 @@
+/* ==========================================================================
+   TECH TRIVIA - Neon Arcade Style
+   Cumpre RNFs de legibilidade, foco, contraste e feedback
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --bg-deep: #050510;
+    --bg-card: rgba(16, 16, 35, 0.82);
+    --texto-claro: #f1f5f9;
+    --texto-mutado: #94a3b8;
+    
+    --neon-cyan: #22d3ee;
+    --neon-purple: #a855f7;
+    --neon-pink: #ec4899;
+    --neon-green: #34d399;
+    --neon-red: #fb7185;
+    
+    --cor-sucesso: #34d399;
+    --cor-erro: #fb7185;
+    
+    --borda-suave: rgba(168, 85, 247, 0.25);
+    --sombra-card: 0 25px 50px -12px rgba(0, 0, 0, 0.65),
+                   0 0 40px rgba(168, 85, 247, 0.12);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+        var(--bg-deep);
+    color: var(--texto-claro);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* Fundo sutil de grade tech (não atrapalha leitura) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+.oculto {
+    display: none !important;
+}
+
+/* ==========================================================================
+   CONTAINER PRINCIPAL
+   ========================================================================== */
+.container {
+    background: var(--bg-card);
+    width: 100%;
+    max-width: 640px;
+    padding: 36px 32px;
+    border-radius: 24px;
+    border: 1px solid var(--borda-suave);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--sombra-card);
+    animation: entrada 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes entrada {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ==========================================================================
+   TIPOGRAFIA
+   ========================================================================== */
+h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(28px, 6vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    background: linear-gradient(115deg, var(--neon-cyan), var(--neon-purple) 50%, var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.35;
+}
+
+p {
+    text-align: center;
+    color: var(--texto-mutado);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+#pontuacao-final {
+    text-align: center;
+    font-size: 1.05rem;
+    color: var(--texto-claro);
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+
+label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--texto-claro);
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+/* ==========================================================================
+   FORMULÁRIO E BOTÕES PRINCIPAIS
+   ========================================================================== */
+input[type="text"] {
+    width: 100%;
+    padding: 15px 18px;
+    background: rgba(5, 5, 16, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: var(--texto-claro);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+}
+
+input[type="text"]::placeholder {
+    color: #64748b;
+}
+
+/* Botões de ação principais */
+button {
+    width: 100%;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
+    margin-top: 16px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 10px 28px rgba(236, 72, 153, 0.45);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Foco de teclado bem visível (RNF07) */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+    outline: 3px solid #f97316 !important;
+    outline-offset: 3px;
+}
+
+/* ==========================================================================
+   STATUS DO QUIZ + PROGRESSO
+   ========================================================================== */
+.status-quiz {
+    margin-bottom: 28px;
+}
+
+.progresso-container {
+    background: rgba(5, 5, 16, 0.7);
+    height: 10px;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#barra-progresso {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+    border-radius: 99px;
+    transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.5);
+}
+
+#num-pergunta {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--texto-mutado);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* ==========================================================================
+   CARD DA PERGUNTA
+   ========================================================================== */
+.card-pergunta {
+    background: rgba(5, 5, 16, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px 20px;
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(34, 211, 238, 0.12);
+    color: var(--neon-cyan);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+#texto-pergunta {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: left;
+    margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   ALTERNATIVAS (botões de resposta)
+   ========================================================================== */
+.lista-opcoes {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+button.opcao {
+    background: rgba(5, 5, 16, 0.55) !important;
+    border: 2px solid #334155 !important;
+    border-radius: 14px !important;
+    padding: 15px 18px !important;
+    color: var(--texto-claro) !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+    transition: all 0.2s ease !important;
+}
+
+button.opcao:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    transform: translateX(4px) !important;
+}
+
+/* Estado selecionado (RNF05) */
+button.opcao.selecionada {
+    border-color: var(--neon-cyan) !important;
+    background: rgba(34, 211, 238, 0.12) !important;
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.3) !important;
+}
+
+/* Estados após resposta (não usa só cor - tem borda + fundo) */
+button.opcao.correta {
+    border-color: var(--cor-sucesso) !important;
+    background: rgba(52, 211, 153, 0.12) !important;
+}
+
+button.opcao.incorreta {
+    border-color: var(--cor-erro) !important;
+    background: rgba(251, 113, 133, 0.1) !important;
+    opacity: 0.85;
+}
+
+/* ==========================================================================
+   FEEDBACK
+   ========================================================================== */
+#feedback-resposta {
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    animation: entrada 0.35s ease forwards;
+}
+
+#feedback-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.feedback-correto {
+    color: var(--cor-sucesso);
+}
+
+.feedback-incorreto {
+    color: var(--cor-erro);
+}
+
+#feedback-explicacao {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    text-align: left;
+    margin-bottom: 14px;
+    background: rgba(5, 5, 16, 0.4);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border-left: 4px solid currentColor;
+}
+
+#feedback-fonte {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--neon-cyan);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+}
+
+#feedback-fonte:hover {
+    color: var(--neon-pink);
+    text-decoration: underline;
+}
+
+#feedback-fonte::before {
+    content: "↗";
+    font-size: 0.9em;
+}
+
+/* ==========================================================================
+   RANKING
+   ========================================================================== */
+.ranking-container {
+    margin: 28px 0;
+    background: rgba(5, 5, 16, 0.5);
+    border-radius: 16px;
+    padding: 8px 4px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    color: var(--texto-mutado);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+td {
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Destaque do 1º lugar */
+tbody tr:first-child {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.12), transparent);
+}
+
+tbody tr:first-child td {
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+tbody tr:first-child td:first-child::before {
+    content: "👑 ";
+}
+
+/* 2º e 3º */
+tbody tr:nth-child(2) td:first-child::before {
+    content: "🥈 ";
+}
+
+tbody tr:nth-child(3) td:first-child::before {
+    content: "🥉 ";
+}
+
+/* Botão de reiniciar mais convidativo (RNF12) */
+#btn-reiniciar {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+}
+
+#btn-reiniciar:hover {
+    box-shadow: 0 10px 28px rgba(16, 185, 129, 0.45);
+}
+
+/* ==========================================================================
+   RESPONSIVO (RNF09 + RNF10)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .container {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+    
+    h1 {
+        font-size: 26px;
+    }
+    
+    #texto-pergunta {
+        font-size: 1.1rem;
+    }
+    
+    button.opcao {
+        padding: 14px 16px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    th, td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+}
+
+
+.lista-opcoes.modo-duas-colunas {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}

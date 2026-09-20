@@ -1,0 +1,32 @@
+[
+  {
+    "categoria": "História da Computação",
+    "pergunta": "O primeiro bug da história da computação foi causado por um inseto real (uma mariposa) preso em um relé?",
+    "alternativas": ["ERTO", "ERRADO"],
+    "correta": 0,
+    "justificativa": "O episódio aconteceu em 1947. Uma mariposa real foi encontrada presa no Relé 70 do computador Harvard Mark II.",
+    "link": "https://wikipedia.org"
+  },
+  {
+    "categoria": "Hardware",
+    "pergunta": "Qual dos seguintes componentes é conhecido como o 'cérebro' do computador, responsible pela execução das instruções de um programa?",
+    "alternativas": [
+      "Memória RAM", 
+      "Placa de Vídeo (GPU)", 
+      "Unidade Central de Processamento (CPU)", 
+      "Disco Rígido (HD/SSD)", 
+      "Placa-Mãe"
+    ],
+    "correta": 2,
+    "justificativa": "A CPU (Central Processing Unit) processa as instruções aritméticas e lógicas que fazem os softwares funcionarem.",
+    "link": "https://wikipedia.org"
+  },
+  {
+    "categoria": "Desenvolvimento Web",
+    "pergunta": "A linguagem CSS é utilizada exclusivamente para definir a estrutura de blocos e textos de um site?",
+    "alternativas": ["CERTO", "ERRADO"],
+    "correta": 1,
+    "justificativa": "O HTML define a estrutura. O CSS serve para aplicar estilos, cores, layouts e o design visual da interface.",
+    "link": "https://mozilla.org"
+  }
+]
