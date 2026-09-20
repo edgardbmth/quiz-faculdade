@@ -1,6 +1,9 @@
 // ==========================================================================
 // 1. MAPEAMENTO DOS ELEMENTOS DO HTML
 // ==========================================================================
+let listaDePerguntas = []; // Vai guardar todas as perguntas vindas do banco
+let indicePerguntaAtual = 0; // Controla em qual pergunta estamos (0 é a primeira)
+
 const telaInicio = document.getElementById('tela-inicio');
 const telaJogo = document.getElementById('tela-jogo');
 const telaFinal = document.getElementById('tela-final');
@@ -24,7 +27,6 @@ const corpoRanking = document.getElementById('corpo-ranking');
 
 // Estados globais da sessão
 let jogadorAtual = "";
-let indicePerguntaAtual = 0;
 let pontuacao = 0;
 let respondeuAHRodadaAtual = false;
 
@@ -229,19 +231,30 @@ btnReiniciar.addEventListener('click', function() {
     telaInicio.classList.remove('oculto');
 });
 
+function exibirPergunta() {
+  const perguntaAtual = listaDePerguntas[indicePerguntaAtual];
+  
+  // Os nomes "texto_da_pergunta" e "categoria" precisarão bater com o seu banco
+  textoPergunta.innerText = perguntaAtual.texto_da_pergunta; 
+  categoriaPergunta.innerText = perguntaAtual.categoria;
+  
+  numPerguntaSpan.innerText = `${indicePerguntaAtual + 1} / ${listaDePerguntas.length}`;
+  listaOpcoesContainer.innerHTML = "";
+}
+
 async function carregarPerguntas() {
   try {
-    // O fetch faz o pedido para a rota GET do seu servidor
     const resposta = await fetch('http://localhost:3000/api/perguntas');
-    const perguntas = await resposta.json();
+    listaDePerguntas = await resposta.json();
     
-    // Mostra o resultado no console do navegador
-    console.log("Perguntas recebidas do banco:", perguntas);
+    console.log("Perguntas recebidas do banco:", listaDePerguntas);
+    
+    // Se vieram perguntas do banco, exibe a primeira na tela
+    if (listaDePerguntas.length > 0) {
+      exibirPergunta();
+    }
     
   } catch (erro) {
     console.error("Erro ao buscar perguntas:", erro);
   }
 }
-
-// Executa a função
-carregarPerguntas();

@@ -39,5 +39,3 @@ app.listen(porta, () => {
   console.log(`Servidor rodando em http://localhost:${porta}`);
   console.log('Banco de dados configurado!');
 });
-
-Edgard_fez_essa_parte_hehe
