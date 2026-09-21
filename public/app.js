@@ -1,8 +1,8 @@
 // ==========================================================================
 // 1. MAPEAMENTO DOS ELEMENTOS DO HTML
 // ==========================================================================
-let listaDePerguntas = []; // Vai guardar todas as perguntas vindas do banco
-let indicePerguntaAtual = 0; // Controla em qual pergunta estamos (0 é a primeira)
+let listaDePerguntas = [];
+let indicePerguntaAtual = 0; // Adicione esta linha também, se não a tiver
 
 const telaInicio = document.getElementById('tela-inicio');
 const telaJogo = document.getElementById('tela-jogo');
@@ -33,69 +33,15 @@ let respondeuAHRodadaAtual = false;
 // Array que receberá os dados do arquivo JSON externo
 let perguntasQuiz = []; 
 
-// CÓPIA DE SEGURANÇA: Garante o funcionamento caso o navegador bloqueie o fetch local (CORS)
-const backupPerguntas = [
-    {
-        categoria: "História da Computação",
-        pergunta: "O primeiro bug da história da computação foi causado por um inseto real (uma mariposa) preso em um relé?",
-        alternativas: ["CERTO", "ERRADO"],
-        correta: 0,
-        justificativa: "O episódio aconteceu em 1947. Uma mariposa real foi encontrada presa no Relé 70 do computador Harvard Mark II.",
-        link: "https://wikipedia.org"
-    },
-    {
-        categoria: "Hardware",
-        pergunta: "Qual dos seguintes componentes é conhecido como o 'cérebro' do computador, responsável pela execução das instruções de um programa?",
-        alternativas: [
-            "Memória RAM", 
-            "Placa de Vídeo (GPU)", 
-            "Unidade Central de Processamento (CPU)", 
-            "Disco Rígido (HD/SSD)", 
-            "Placa-Mãe"
-        ],
-        correta: 2,
-        justificativa: "A CPU (Central Processing Unit) processa as instruções aritméticas e lógicas que fazem os softwares funcionarem.",
-        link: "https://wikipedia.org"
-    },
-    {
-        categoria: "Desenvolvimento Web",
-        pergunta: "A linguagem CSS é utilizada exclusivamente para definir a estrutura de blocos e textos de um site?",
-        alternativas: ["CERTO", "ERRADO"],
-        correta: 1,
-        justificativa: "O HTML define a estrutura. O CSS serve para aplicar estilos, cores, layouts e o design visual da interface.",
-        link: "https://mozilla.org"
-    }
-];
-
 // ==========================================================================
-// 1B. FUNÇÃO ASSÍNCRONA DA API SIMULADA LOCAL (RQ02 / PREMISSA)
-// ==========================================================================
-async function carregarPerguntasDaAPI() {
-    try {
-        // Realiza o fetch no arquivo local agindo como um servidor/banco de dados
-        const resposta = await fetch('perguntas.json'); 
-        if (!resposta.ok) throw new Error('Arquivo JSON não encontrado.');
-        perguntasQuiz = await resposta.json();
-        console.log("Sucesso: Dados carregados via API Local (perguntas.json)!");
-    } catch (erro) {
-        console.warn("Ambiente local sem servidor HTTP. Ativando cópia de segurança para não travar:", erro);
-        // Garante o funcionamento offline ou por clique duplo direto na pasta
-        perguntasQuiz = backupPerguntas; 
-    }
-}
-
-// Inicializa a carga assim que o script é lido
-carregarPerguntasDaAPI();
-
-// ==========================================================================
-// 2. EVENTO DE INÍCIO DO QUIZ (RQ01)
+// 1. EVENTO DE INÍCIO DO QUIZ (RQ01)
 // ==========================================================================
 formLogin.addEventListener('submit', function(evento) {
     evento.preventDefault(); 
     const nomeDigitado = nomeJogadorInput.value.trim();
 
     // Trava de segurança: impede o avanço se o nome estiver vazio OU se os dados não carregaram
-    if (nomeDigitado === "" || perguntasQuiz.length === 0) return;
+    if (nomeDigitado === "" || listaDePerguntas.length === 0) return;
 
     jogadorAtual = nomeDigitado;
     telaInicio.classList.add('oculto');
@@ -105,19 +51,21 @@ formLogin.addEventListener('submit', function(evento) {
 });
 
 // ==========================================================================
-// 3. CARREGAR PERGUNTA (Layout Adaptável Dinâmico)
+// 2. CARREGAR PERGUNTA (Layout Adaptável Dinâmico)
 // ==========================================================================
 function carregarPergunta() {
     feedbackRespostaSection.classList.add('oculto');
     respondeuAHRodadaAtual = false; 
     
-    const dadosPergunta = perguntasQuiz[indicePerguntaAtual];
+    const dadosPergunta = listaDePerguntas[indicePerguntaAtual];
     
     categoriaPergunta.textContent = dadosPergunta.categoria;
-    textoPergunta.textContent = dadosPergunta.pergunta;
-    numPerguntaSpan.textContent = `Pergunta ${indicePerguntaAtual + 1} de ${perguntasQuiz.length}`;
+    textoPergunta.textContent = dadosPergunta.enunciado;
     
-    const porcentagemProgresso = ((indicePerguntaAtual + 1) / perguntasQuiz.length) * 100;
+    // CORREÇÃO: Variável duplicada removida e texto do contador corrigido
+    numPerguntaSpan.textContent = `Pergunta ${indicePerguntaAtual + 1} de ${listaDePerguntas.length}`;
+    
+    const porcentagemProgresso = ((indicePerguntaAtual + 1) / listaDePerguntas.length) * 100;
     barraProgresso.style.width = `${porcentagemProgresso}%`;
     
     listaOpcoesContainer.innerHTML = "";
@@ -129,65 +77,71 @@ function carregarPergunta() {
         listaOpcoesContainer.classList.remove('modo-duas-colunas');
     }
     
-    dadosPergunta.alternativas.forEach((textoAlternativa, index) => {
+    dadosPergunta.alternativas.forEach((alternativa, index) => {
         const botao = document.createElement('button');
         botao.classList.add('opcao');
-        botao.textContent = textoAlternativa;
+        
+        // Agora dizemos ao código para puxar exatamente o "texto_alternativa" que vimos no seu print
+        botao.textContent = alternativa.texto_alternativa; 
+        
         botao.setAttribute('data-index', index);
-        botao.setAttribute('tabindex', '0'); // RNF06 & RNF07
+        botao.setAttribute('tabindex', '0');
 
         botao.addEventListener('click', function() {
-            processarEscolha(index); // RQ06
+            processarEscolha(index); 
         });
-        
+
         listaOpcoesContainer.appendChild(botao);
     });
 }
 
 // ==========================================================================
-// 4. PROCESSAR ESCOLHA E FEEDBACK IMEDIATO (RQ06, RQ03, RNF03, RNF08)
+// 3. PROCESSAR ESCOLHA E FEEDBACK IMEDIATO (RQ06, RQ03, RNF03, RNF08)
 // ==========================================================================
 function processarEscolha(indiceSelecionado) {
-    const dadosPergunta = perguntasQuiz[indicePerguntaAtual];
-    const todosOsBotoes = listaOpcoesContainer.querySelectorAll('.opcao');
-    
+    // CORREÇÃO: Definidas as variáveis que faltavam nesta função para não dar erro
+    const dadosPergunta = listaDePerguntas[indicePerguntaAtual];
+    const todosOsBotoes = document.querySelectorAll('.opcao');
+
     todosOsBotoes.forEach((btn, idx) => {
-        btn.classList.remove('selecionada');
-        if (idx === indiceSelecionado) {
-            btn.classList.add('selecionada');
-        }
+        btn.classList.add('selecionada');
     });
 
+    // 1. Verifica se a alternativa que o jogador clicou é a verdadeira
+    const acertou = dadosPergunta.alternativas[indiceSelecionado].eh_correta === true;
+
     if (!respondeuAHRodadaAtual) {
-        if (indiceSelecionado === dadosPergunta.correta) {
+        if (acertou) {
             pontuacao++;
         }
         respondeuAHRodadaAtual = true;
     }
 
     feedbackTitulo.classList.remove('feedback-correto', 'feedback-invertido');
-    
-    if (indiceSelecionado === dadosPergunta.correta) {
+
+    // 2. Dá o feedback visual (Verde ou Vermelho)
+    if (acertou) {
         feedbackTitulo.textContent = "✔ Resposta Correta!";
         feedbackTitulo.className = "feedback-correto";
     } else {
-        feedbackTitulo.textContent = "✖ Resposta Incorreta";
+        feedbackTitulo.textContent = "✖ Resposta Incorreta!";
         feedbackTitulo.className = "feedback-incorreto";
     }
 
+    // 3. Mostra a justificativa e o link correto do banco de dados
     feedbackExplicacao.textContent = dadosPergunta.justificativa;
-    feedbackFonte.href = dadosPergunta.link;
+    feedbackFonte.href = dadosPergunta.fonte_url;
     feedbackFonte.textContent = "Saiba mais na fonte";
-    
+
     feedbackRespostaSection.classList.remove('oculto');
 }
 
 // ==========================================================================
-// 5. AVANÇAR E CONCLUIR (RQ03, RQ04, RQ05)
+// 4. AVANÇAR E CONCLUIR (RQ03, RQ04, RQ05)
 // ==========================================================================
 btnProxima.addEventListener('click', function() {
     indicePerguntaAtual++;
-    if (indicePerguntaAtual < perguntasQuiz.length) {
+   if (indicePerguntaAtual < listaDePerguntas.length)  {
         carregarPergunta();
     } else {
         finalizarQuiz();
@@ -198,7 +152,8 @@ function finalizarQuiz() {
     telaJogo.classList.add('oculto');
     telaFinal.classList.remove('oculto');
     
-    pontuacaoFinalTexto.innerHTML = `Parabéns, <strong>${jogadorAtual}</strong>!<br>Você pontuou <strong>${pontuacao}</strong> de <strong>${perguntasQuiz.length}</strong> questões.`;
+    // CORREÇÃO: alterado perguntasQuiz para listaDePerguntas
+    pontuacaoFinalTexto.innerHTML = `Parabéns, <strong>${jogadorAtual}</strong>!<br>Você pontuou <strong>${pontuacao}</strong> de <strong>${listaDePerguntas.length}</strong> questões.`;
     
     gerenciarRankingStorage();
 }
@@ -234,8 +189,8 @@ btnReiniciar.addEventListener('click', function() {
 function exibirPergunta() {
   const perguntaAtual = listaDePerguntas[indicePerguntaAtual];
   
-  // Os nomes "texto_da_pergunta" e "categoria" precisarão bater com o seu banco
-  textoPergunta.innerText = perguntaAtual.texto_da_pergunta; 
+  // CORREÇÃO: texto_da_pergunta alterado para enunciado para não travar
+  textoPergunta.innerText = perguntaAtual.enunciado; 
   categoriaPergunta.innerText = perguntaAtual.categoria;
   
   numPerguntaSpan.innerText = `${indicePerguntaAtual + 1} / ${listaDePerguntas.length}`;
@@ -258,3 +213,4 @@ async function carregarPerguntas() {
     console.error("Erro ao buscar perguntas:", erro);
   }
 }
+carregarPerguntas();

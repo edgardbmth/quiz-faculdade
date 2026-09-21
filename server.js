@@ -14,7 +14,7 @@ app.use(express.static('public'));
 
 app.get('/api/perguntas', async (req, res) => {
  
-  const { data, error } = await supabase.from('perguntas').select('*');
+  const { data, error } = await supabase.from('perguntas').select('*, alternativas(*)');
 
   if (error) {
     return res.status(500).json({ erro: error.message });
