@@ -10,7 +10,7 @@ Este repositório contém o código-fonte de um jogo de Quiz interativo.
 * Edgard Aparecido
 * Adriano Muniz 
 * Higor da Silva
-* Felipe Silva
+* Enzo Moreira
 * José Renato Bettuz
 * Lucas Rodrigues
 
