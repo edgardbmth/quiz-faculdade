@@ -291,13 +291,36 @@ INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
 
 SELECT setval('perguntas_id_seq', (SELECT MAX(id) FROM perguntas));
 
-SELECT 
-    p.id, 
-    p.categoria, 
-    p.enunciado, 
-    a.texto_alternativa, 
-    a.eh_correta 
-FROM perguntas p
-JOIN alternativas a ON p.id = a.pergunta_id
-WHERE p.id = 1;
+UPDATE perguntas SET fonte_url = 'VUNESP - Câmara de Sertãozinho/SP' WHERE id = 1;
+UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 2;
+UPDATE perguntas SET fonte_url = 'QUADRIX - CRN-3' WHERE id = 3;
+UPDATE perguntas SET fonte_url = 'FGV - IMBEL' WHERE id = 4;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - INSS' WHERE id = 5;
+UPDATE perguntas SET fonte_url = 'FCC - APEX-Brasil' WHERE id = 6;
+UPDATE perguntas SET fonte_url = 'IBFC - MGS' WHERE id = 7;
+UPDATE perguntas SET fonte_url = 'VUNESP - Prefeitura de Osasco/SP' WHERE id = 8;
+UPDATE perguntas SET fonte_url = 'QUADRIX - CRB-6' WHERE id = 9;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - Polícia Federal' WHERE id = 10;
+UPDATE perguntas SET fonte_url = 'FGV - MPERJ' WHERE id = 11;
+UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 12;
+UPDATE perguntas SET fonte_url = 'VUNESP - Prefeitura de São José dos Campos/SP' WHERE id = 13;
+UPDATE perguntas SET fonte_url = 'QUADRIX - CREFONO-4' WHERE id = 14;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - DPE-TO' WHERE id = 15;
+UPDATE perguntas SET fonte_url = 'FCC - TRT-15' WHERE id = 16;
+UPDATE perguntas SET fonte_url = 'FGV - IBGE' WHERE id = 17;
+UPDATE perguntas SET fonte_url = 'IBFC - IF-AM' WHERE id = 18;
+UPDATE perguntas SET fonte_url = 'VUNESP - Câmara de Piracicaba/SP' WHERE id = 19;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - BNDES' WHERE id = 20;
+UPDATE perguntas SET fonte_url = 'FCC - TRT-2' WHERE id = 21;
+UPDATE perguntas SET fonte_url = 'FGV - IMBEL' WHERE id = 22;
+UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 23;
+UPDATE perguntas SET fonte_url = 'VUNESP - DAE de Jundiaí/SP' WHERE id = 24;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - DPE-DF' WHERE id = 25;
+UPDATE perguntas SET fonte_url = 'QUADRIX - CRN-3' WHERE id = 26;
+UPDATE perguntas SET fonte_url = 'IBFC - MGS' WHERE id = 27;
+UPDATE perguntas SET fonte_url = 'FGV - MPERJ' WHERE id = 28;
+UPDATE perguntas SET fonte_url = 'VUNESP - Oscar Freire/SP' WHERE id = 29;
+UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE' WHERE id = 30;
+
+
 
