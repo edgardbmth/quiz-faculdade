@@ -6,321 +6,268 @@ CREATE TABLE perguntas (
     fonte_url TEXT NOT NULL
 );
 
-CREATE TABLE alternativas (
-    id SERIAL PRIMARY KEY,
-    pergunta_id INT NOT NULL REFERENCES perguntas(id) ON DELETE CASCADE,
-    texto_alternativa TEXT NOT NULL,
-    eh_correta BOOLEAN NOT NULL DEFAULT FALSE
-);
+-- 1. Limpeza das tabelas existentes e reinício dos IDs
+TRUNCATE TABLE alternativas, perguntas RESTART IDENTITY CASCADE;
 
 -- =============================================
--- HARDWARE E ARQUITETURA (1 a 5)
+-- ENGENHARIA DE SOFTWARE E DESENVOLVIMENTO (1 a 6)
 -- =============================================
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(1 , 'Hardware e Arquitetura', 'Qual componente de um computador é responsável por realizar as operações aritméticas e lógicas, sendo considerado o "cérebro" do processador?', 'A Unidade Lógica e Aritmética (ULA) é a parte da CPU responsável pelas operações aritméticas e lógicas.', 'VUNESP - Câmara de Sertãozinho/SP');
+(1, 'Engenharia de Software', 'Qual é o papel principal das Histórias de Usuário (User Stories) no framework Scrum?', 'Uma História de Usuário descreve uma funcionalidade do ponto de vista do usuário final, servindo como item do Product Backlog para expressar valor de negócio.', 'https://scrumguides.org/scrum-guide.html');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(1, 'Memória RAM', FALSE),
-(1, 'Placa-mãe', FALSE),
-(1, 'Unidade Lógica e Aritmética (ULA)', TRUE),
-(1, 'Disco Rígido (HD)', FALSE),
-(1, 'Fonte de Alimentação', FALSE);
+(1, 'Definir a arquitetura física dos servidores de banco de dados.', FALSE),
+(1, 'Descrever uma funcionalidade sob a perspectiva do usuário para gerar valor de negócio.', TRUE),
+(1, 'Mapear a alocação de memória RAM dos componentes do sistema.', FALSE),
+(1, 'Substituir os testes unitários da aplicação.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(2, 'Hardware e Arquitetura', 'Em relação às memórias de um computador, assinale a alternativa que apresenta uma memória do tipo volátil:', 'A memória RAM é volátil, ou seja, perde os dados quando o computador é desligado.', 'IBFC - EBSERH');
+(2, 'Engenharia de Software', 'Qual é a diferença fundamental entre Testes de Unidade e Testes de Integração?', 'Testes de Unidade validam a menor unidade isolada do código (com mocks nas dependências), enquanto Testes de Integração verificam a comunicação entre múltiplos módulos.', 'https://martinfowler.com/articles/practical-test-pyramid.html');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(2, 'ROM', FALSE),
-(2, 'Flash (Pendrive)', FALSE),
-(2, 'RAM', TRUE),
-(2, 'Hard Disk (HD)', FALSE),
-(2, 'SSD', FALSE);
+(2, 'Testes de Unidade testam o sistema completo e Testes de Integração testam apenas funções isoladas.', FALSE),
+(2, 'Testes de Unidade validam módulos isoladamente; Testes de Integração validam a interface e comunicação entre os módulos.', TRUE),
+(2, 'Testes de Integração são executados manualmente pelo usuário final.', FALSE),
+(2, 'Não há diferença técnica entre os dois tipos de teste.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(3 ,'Hardware e Arquitetura', 'O barramento responsável por transportar o endereço de memória ou de dispositivo de E/S com o qual o processador deseja se comunicar é chamado de:', 'O Barramento de Endereços carrega a informação de qual posição de memória ou dispositivo o processador quer acessar.', 'QUADRIX - CRN-3');
+(3, 'Engenharia de Software', 'O que estabelece o Princípio da Inversão de Dependência (DIP) do SOLID?', 'Módulos de alto nível não devem depender de módulos de baixo nível; ambos devem depender de abstrações (interfaces ou classes abstratas).', 'https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design-pt');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(3, 'Barramento de Dados', FALSE),
-(3, 'Barramento de Endereços', TRUE),
-(3, 'Barramento de Controle', FALSE),
-(3, 'Barramento Serial (USB)', FALSE),
-(3, 'Barramento SATA', FALSE);
+(3, 'Classes filhas nunca devem herdar métodos da classe pai.', FALSE),
+(3, 'Módulos de alto e baixo nível devem depender de abstrações, reduzindo o acoplamento.', TRUE),
+(3, 'Uma classe deve ter múltiplas responsabilidades na aplicação.', FALSE),
+(3, 'Todas as variáveis do programa devem ser globais.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(4 ,'Hardware e Arquitetura', 'Qual das opções a seguir representa o barramento/interface comumente empregado para conexão interna de SSDs de altíssima velocidade em placas-mãe modernas?', 'O M.2 NVMe é o padrão atual para SSDs de alta velocidade conectados diretamente na placa-mãe.', 'FGV - IMBEL');
+(4, 'Engenharia de Software', 'No modelo MPS.BR, qual é a finalidade dos Níveis de Maturidade (de G a A)?', 'Avaliar e atestar a capacidade e evolução dos processos de software de uma organização.', 'https://softex.br/mpsbr/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(4, 'M.2 NVMe', TRUE),
-(4, 'VGA', FALSE),
-(4, 'RS-232', FALSE),
-(4, 'Parallel ATA (IDE)', FALSE),
-(4, 'PS/2', FALSE);
+(4, 'Medir a velocidade de processamento do hardware.', FALSE),
+(4, 'Graduar a capacidade e maturidade dos processos de software da organização.', TRUE),
+(4, 'Definir o nível de criptografia das conexões de rede.', FALSE),
+(4, 'Classificar a licença comercial dos softwares produzidos.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(5, 'Hardware e Arquitetura', 'A memória cache é uma memória de alta velocidade que fica posicionada entre o processador e a memória principal (RAM), com o objetivo de acelerar o acesso aos dados mais frequentemente utilizados.', 'A afirmação está correta. A cache reduz a latência de acesso aos dados mais usados pelo processador.', 'Cebraspe / CESPE - INSS');
+(5, 'Engenharia de Software', 'No diagrama de classes UML, qual a diferença entre Agregação e Composição?', 'Na Agregação a parte existe independentemente do todo; na Composição a destruição do todo implica na destruição das partes.', 'https://www.uml.org/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(5, 'CERTO', TRUE),
-(5, 'ERRADO', FALSE);
+(5, 'Na Agregação a vida do filho está acoplada ao pai; na Composição o filho sobrevive sem o pai.', FALSE),
+(5, 'Na Agregação o objeto parte pode existir sem o todo; na Composição o objeto parte depende do ciclo de vida do todo.', TRUE),
+(5, 'Agregação só é usada em bancos relacionais e Composição em NoSQL.', FALSE),
+(5, 'Ambas possuem exatamente a mesma semântica na UML.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(6, 'Engenharia de Software', 'Qual é a característica principal da Arquitetura de Microsserviços em comparação com o Monolito?', 'Decompor a aplicação em serviços pequenos, autônomos, fracamente acoplados e implantáveis de forma independente.', 'https://learn.microsoft.com/pt-br/azure/architecture/guide/architecture-styles/microservices');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(6, 'Unificar todo o código fonte em uma única base de dados centralizada e indivisível.', FALSE),
+(6, 'Dividir a aplicação em serviços independentes que podem ser implantados e escalados individualmente.', TRUE),
+(6, 'Eliminar o uso de APIs HTTP/REST nas comunicações do sistema.', FALSE),
+(6, 'Obrigá-los a utilizar o mesmo banco de dados relacional para todos os serviços.', FALSE);
 
 -- =============================================
--- REDES DE COMPUTADORES (6 a 10)
--- =============================================
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(6, 'Redes de Computadores', 'No modelo de referência OSI, a camada encarregada do roteamento dos pacotes através da rede, definindo os endereços IP de origem e destino, é a camada de:', 'A Camada de Rede (Camada 3) é responsável pelo endereçamento lógico (IP) e pelo roteamento.', 'FCC - APEX-Brasil');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(6, 'Enlace', FALSE),
-(6, 'Transporte', FALSE),
-(6, 'Rede', TRUE),
-(6, 'Sessão', FALSE),
-(6, 'Aplicação', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(7, 'Redes de Computadores', 'Qual protocolo é responsável por atribuir dinamicamente configurações de rede (como endereço IP, máscara e gateway) aos dispositivos conectados?', 'O DHCP (Dynamic Host Configuration Protocol) distribui automaticamente os parâmetros de rede.', 'IBFC - MGS');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(7, 'DNS', FALSE),
-(7, 'DHCP', TRUE),
-(7, 'FTP', FALSE),
-(7, 'SMTP', FALSE),
-(7, 'ICMP', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(8, 'Redes de Computadores', 'Em uma rede local (LAN) ethernet, o dispositivo de camada de enlace (Camada 2) que conecta múltiplos equipamentos e utiliza a tabela MAC para encaminhar quadros apenas para a porta de destino correta é o:', 'O Switch trabalha na camada 2 e encaminha os frames com base no endereço MAC.', 'VUNESP - Prefeitura de Osasco/SP');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(8, 'Hub', FALSE),
-(8, 'Switch', TRUE),
-(8, 'Modem', FALSE),
-(8, 'Repetidor', FALSE),
-(8, 'Patch Panel', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(9, 'Redes de Computadores', 'O protocolo responsável por traduzir nomes de domínio amigáveis (como www.exemplo.com.br) em endereços IP numéricos é o:', 'O DNS (Domain Name System) faz a tradução de nomes para endereços IP.', 'QUADRIX - CRB-6');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(9, 'HTTP', FALSE),
-(9, 'SNMP', FALSE),
-(9, 'SSH', FALSE),
-(9, 'DNS', TRUE),
-(9, 'ARP', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(10, 'Redes de Computadores', 'O protocolo HTTPS utiliza a porta TCP 443 por padrão para realizar a comunicação segura e criptografada entre um navegador e um servidor web.', 'A afirmação está correta. A porta padrão do HTTPS é a 443.', 'Cebraspe / CESPE - Polícia Federal');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(10, 'CERTO', TRUE),
-(10, 'ERRADO', FALSE);
-
--- =============================================
--- SISTEMAS OPERACIONAIS (11 a 15)
+-- BANCO DE DADOS (7 a 12)
 -- =============================================
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(11, 'Sistemas Operacionais', 'No sistema operacional Linux, qual comando é utilizado no terminal para listar o conteúdo do diretório atual?', 'O comando ls (list) lista os arquivos e pastas do diretório atual.', 'FGV - MPERJ');
+(7, 'Banco de Dados', 'O que representam as propriedades ACID em SGBDs Relacionais?', 'Atomicidade, Consistência, Isolamento e Durabilidade — garantias para transações confiáveis.', 'https://www.postgresql.org/docs/current/tutorial-transactions.html');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(11, 'cd', FALSE),
-(11, 'pwd', FALSE),
-(11, 'ls', TRUE),
-(11, 'mkdir', FALSE),
-(11, 'cp', FALSE);
+(7, 'Acesso, Controle, Integridade e Desempenho.', FALSE),
+(7, 'Atomicidade, Consistência, Isolamento e Durabilidade.', TRUE),
+(7, 'Autenticação, Criptografia, Identificação e Difusão.', FALSE),
+(7, 'Agrupamento, Consulta, Inserção e Deleção.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(12, 'Sistemas Operacionais', 'No Linux, o comando utilizado para alterar as permissões de acesso de arquivos e diretórios é o:', 'O comando chmod (change mode) altera as permissões de leitura, escrita e execução.', 'IBFC - EBSERH');
+(8, 'Banco de Dados', 'Qual a regra principal para que uma tabela esteja na Terceira Forma Normal (3FN)?', 'Estar na 2FN e não possuir dependências funcionais transitivas entre atributos não-chave.', 'https://docs.oracle.com/en/database/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(12, 'chown', FALSE),
-(12, 'chmod', TRUE),
-(12, 'chgrp', FALSE),
-(12, 'ps', FALSE),
-(12, 'top', FALSE);
+(8, 'Possuir pelo menos duas chaves estrangeiras cadastradas.', FALSE),
+(8, 'Estar na 2FN e não apresentar dependências transitivas entre colunas não-chave.', TRUE),
+(8, 'Permitir campos com múltiplos valores separados por vírgula.', FALSE),
+(8, 'Ter todos os campos indexados no B-Tree.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(13, 'Sistemas Operacionais', 'No Windows 10/11, qual atalho de teclado é padrão para abrir o Gerenciador de Tarefas diretamente, sem passar pela tela de segurança?', 'O atalho Ctrl + Shift + Esc abre diretamente o Gerenciador de Tarefas.', 'VUNESP - Prefeitura de São José dos Campos/SP');
+(9, 'Banco de Dados', 'Qual a diferença entre as cláusulas WHERE e HAVING em comandos SQL?', 'WHERE filtra linhas antes do agrupamento; HAVING filtra os grupos resultantes das funções de agregação.', 'https://www.w3schools.com/sql/sql_having.asp');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(13, 'Ctrl + C', FALSE),
-(13, 'Ctrl + Alt + Del', FALSE),
-(13, 'Ctrl + Shift + Esc', TRUE),
-(13, 'Windows + R', FALSE),
-(13, 'Alt + F4', FALSE);
+(9, 'WHERE é usado em bancos NoSQL e HAVING em bancos SQL.', FALSE),
+(9, 'WHERE filtra registros individuais antes do GROUP BY; HAVING filtra dados agregados após o GROUP BY.', TRUE),
+(9, 'HAVING é executado primeiro que o WHERE em todos os casos.', FALSE),
+(9, 'Ambas as cláusulas desempenham exatamente a mesma função.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(14, 'Sistemas Operacionais', 'No sistema Linux, o diretório onde ficam armazenados os arquivos de configuração do sistema (como fstab, resolv.conf, etc.) é o:', 'O diretório /etc concentra a maior parte dos arquivos de configuração do sistema.', 'QUADRIX - CREFONO-4');
+(10, 'Banco de Dados', 'Qual o principal benefício e o custo de se criar um Índice (ex: B-Tree) em uma tabela?', 'Acelera a velocidade das consultas de leitura (SELECT), mas adiciona custo em disco e sobrecarga de escrita (INSERT/UPDATE/DELETE).', 'https://www.postgresql.org/docs/current/indexes.html');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(14, '/bin', FALSE),
-(14, '/dev', FALSE),
-(14, '/etc', TRUE),
-(14, '/tmp', FALSE),
-(14, '/home', FALSE);
+(10, 'Aumenta o tempo de resposta das consultas e reduz o tamanho do banco em disco.', FALSE),
+(10, 'Acelera consultas de busca, porém exige mais espaço em disco e torna modificações (escrita) ligeiramente mais lentas.', TRUE),
+(10, 'Garante que os dados fiquem criptografados automaticamente.', FALSE),
+(10, 'Impede a ocorrência de deadlocks na tabela.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(15, 'Sistemas Operacionais', 'No Windows, o comando ping executado no Prompt de Comando (cmd) utiliza pacotes do protocolo ICMP para testar a conectividade entre dois nós da rede.', 'A afirmação está correta. O ping usa o protocolo ICMP (Echo Request/Reply).', 'Cebraspe / CESPE - DPE-TO');
+(11, 'Banco de Dados', 'De acordo com o Teorema CAP, quais propriedades um sistema distribuído não consegue garantir 100% simultaneamente?', 'Consistência (Consistency), Disponibilidade (Availability) e Tolerância a Partição (Partition Tolerance).', 'https://aws.amazon.com/pt/nosql/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(15, 'CERTO', TRUE),
-(15, 'ERRADO', FALSE);
+(11, 'Criptografia, Autenticação e Privacidade.', FALSE),
+(11, 'Consistência, Disponibilidade e Tolerância a Partições de Rede.', TRUE),
+(11, 'Concorrência, Algoritmos e Processamento.', FALSE),
+(11, 'Compressão, Armazenamento e Performance.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(12, 'Banco de Dados', 'Qual a diferença entre os comandos SQL TRUNCATE TABLE e DELETE FROM?', 'DELETE é DML, apaga linhas registrando logs individualmente e permite WHERE; TRUNCATE é DDL, limpa a tabela desalocando páginas de forma rápida.', 'https://learn.microsoft.com/pt-br/sql/t-sql/statements/truncate-table-transact-sql');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(12, 'TRUNCATE apaga o banco de dados inteiro; DELETE apaga apenas o schema da tabela.', FALSE),
+(12, 'DELETE apaga linhas permitindo filtro WHERE com registro linha a linha; TRUNCATE reefetua o esvaziamento completo da tabela via DDL de forma rápida.', TRUE),
+(12, 'Não há nenhuma diferença técnica entre TRUNCATE e DELETE.', FALSE),
+(12, 'TRUNCATE só funciona se a tabela tiver chave estrangeira ativa.', FALSE);
 
 -- =============================================
--- BANCO DE DADOS (16 a 20)
--- =============================================
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(16, 'Banco de Dados', 'Em linguagem SQL, qual comando da DML (Data Manipulation Language) é utilizado para selecionar e consultar registros existentes em uma tabela?', 'O comando SELECT é usado para consultar dados em uma ou mais tabelas.', 'FCC - TRT-15');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(16, 'UPDATE', FALSE),
-(16, 'INSERT', FALSE),
-(16, 'DELETE', FALSE),
-(16, 'SELECT', TRUE),
-(16, 'CREATE', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(17, 'Banco de Dados', 'Qual chave em uma tabela de Banco de Dados Relacional serve para identificar de forma única cada registro/linha daquela tabela?', 'A Chave Primária (Primary Key) garante a unicidade de cada registro na tabela.', 'FGV - IBGE');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(17, 'Chave Estrangeira (Foreign Key)', FALSE),
-(17, 'Chave Primária (Primary Key)', TRUE),
-(17, 'Chave Secundária', FALSE),
-(17, 'Índices Secundários', FALSE),
-(17, 'Chave Composta Externa', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(18, 'Banco de Dados', 'Na linguagem SQL, para inserir uma nova linha com dados em uma tabela existente, utiliza-se a instrução:', 'A instrução INSERT INTO é usada para adicionar novos registros em uma tabela.', 'IBFC - IF-AM');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(18, 'ADD ROW', FALSE),
-(18, 'INSERT INTO', TRUE),
-(18, 'UPDATE TABLE', FALSE),
-(18, 'NEW RECORD', FALSE),
-(18, 'CREATE ROW', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(19, 'Banco de Dados', 'O comando da linguagem SQL pertencente ao grupo DDL (Data Definition Language) utilizado para apagar completamente uma tabela e sua estrutura do banco de dados é:', 'O comando DROP TABLE remove a tabela inteira (estrutura + dados).', 'VUNESP - Câmara de Piracicaba/SP');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(19, 'DROP TABLE', TRUE),
-(19, 'DELETE TABLE', FALSE),
-(19, 'REMOVE TABLE', FALSE),
-(19, 'TRUNCATE ONLY', FALSE),
-(19, 'CLEAR TABLE', FALSE);
-
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(20, 'Banco de Dados', 'A Chave Estrangeira (Foreign Key) é utilizada em bancos de dados relacionais para estabelecer e impor um vínculo entre os dados de duas tabelas diferentes.', 'A afirmação está correta. A Foreign Key cria o relacionamento entre tabelas.', 'Cebraspe / CESPE - BNDES');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(20, 'CERTO', TRUE),
-(20, 'ERRADO', FALSE);
-
--- =============================================
--- LINGUAGENS E LÓGICA (21 a 25)
+-- REDES E SEGURANÇA DA INFORMAÇÃO (13 a 18)
 -- =============================================
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(21, 'Linguagens e Lógica', 'Em relação às estruturas de controle em programação, qual estrutura é classificada como uma estrutura de repetição com teste no início?', 'O while testa a condição antes de executar o bloco de código (teste no início).', 'FCC - TRT-2');
+(13, 'Redes e Segurança', 'Qual a diferença fundamental na Camada de Transporte entre os protocolos TCP e UDP?', 'O TCP é orientado à conexão com garantia de entrega e ordem; o UDP é não orientado à conexão e focado em baixa latência.', 'https://datatracker.ietf.org/doc/html/rfc793');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(21, 'if ... else', FALSE),
-(21, 'switch ... case', FALSE),
-(21, 'while', TRUE),
-(21, 'do ... while', FALSE),
-(21, 'try ... catch', FALSE);
+(13, 'UDP garante a entrega de 100% dos pacotes e o TCP não faz verificação de erros.', FALSE),
+(13, 'TCP é orientado à conexão e garante a entrega dos pacotes; UDP não é orientado à conexão e foca em velocidade.', TRUE),
+(13, 'TCP opera na Camada de Aplicação e UDP na Camada Física.', FALSE),
+(13, 'Ambos possuem exatamente as mesmas características de controle de fluxo.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(22, 'Linguagens e Lógica', 'Em Python, a função nativa utilizada para retornar a quantidade de itens presentes em uma lista ou o número de caracteres em uma string é:', 'A função len() retorna o tamanho de uma sequência (lista, string, etc.).', 'FGV - IMBEL');
+(14, 'Redes e Segurança', 'O que caracteriza um ataque do tipo DDoS (Distributed Denial of Service)?', 'Negação de serviço causada pela sobrecarga de recursos do alvo por múltiplas origens (botnet).', 'https://www.cloudflare.com/pt-br/learning/ddos/what-is-a-ddos-attack/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(22, 'count()', FALSE),
-(22, 'size()', FALSE),
-(22, 'len()', TRUE),
-(22, 'length()', FALSE),
-(22, 'sum()', FALSE);
+(14, 'Injeção de código SQL em formulários web.', FALSE),
+(14, 'Inundação maliciosa de tráfego coordenada a partir de múltiplos dispositivos para indisponibilizar um serviço.', TRUE),
+(14, 'Roubo de senhas por meio de chamadas telefônicas falsas.', FALSE),
+(14, 'Criptografia não autorizada do sistema de arquivos.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(23, 'Linguagens e Lógica', 'Na Programação Orientada a Objetos (POO), o mecanismo pelo qual uma classe filha herda atributos e métodos de uma classe pai é chamado de:', 'Herança é o princípio da POO que permite reutilizar código de uma classe pai.', 'IBFC - EBSERH');
+(15, 'Redes e Segurança', 'Na Criptografia Assimétrica, qual chave é usada para Criptografar e qual é usada para Assinar digitalmente?', 'Criptografa-se com a Chave Pública do destinatário; assina-se com a Chave Privada do remetente.', 'https://pkiconsortium.org/');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(23, 'Encapsulamento', FALSE),
-(23, 'Polimorfismo', FALSE),
-(23, 'Herança', TRUE),
-(23, 'Abstração', FALSE),
-(23, 'Instanciação', FALSE);
+(15, 'Criptografa-se com a chave privada e assina-se com o endereço IP.', FALSE),
+(15, 'Para confidencialidade usa-se a Chave Pública do destinatário; para Assinatura Digital usa-se a Chave Privada do remetente.', TRUE),
+(15, 'Ambas as operações utilizam obrigatoriamente a mesma chave simétrica de 128 bits.', FALSE),
+(15, 'Chaves públicas não podem ser compartilhadas com terceiros.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(24, 'Linguagens e Lógica', 'Em lógicas de programação, o operador lógico que resulta em VERDADEIRO apenas se ambas as condições analisadas forem verdadeiras é o operador:', 'O operador AND (E) só retorna verdadeiro quando as duas condições são verdadeiras.', 'VUNESP - DAE de Jundiaí/SP');
+(16, 'Redes e Segurança', 'Qual o papel do protocolo TLS (Transport Layer Security) em conexões HTTPS?', 'Prover confidencialidade, integridade e autenticação através do estabelecimento de um canal criptografado.', 'https://datatracker.ietf.org/doc/html/rfc8446');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(24, 'OR (OU)', FALSE),
-(24, 'NOT (NÃO)', FALSE),
-(24, 'AND (E)', TRUE),
-(24, 'XOR (OU Exclusivo)', FALSE),
-(24, 'NAND', FALSE);
+(16, 'Aumentar a velocidade do download compactando imagens.', FALSE),
+(16, 'Garantir a confidencialidade e integridade da comunicação via criptografia na camada de transporte.', TRUE),
+(16, 'Converter endereços IP em nomes de domínio legíveis.', FALSE),
+(16, 'Substituir o uso de roteadores na rede local.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(25, 'Linguagens e Lógica', 'Em linguagens de programação, uma variável do tipo primitivo Boolean (booleana) pode armazenar apenas dois valores possíveis: verdadeiro (True) ou falso (False).', 'A afirmação está correta. O tipo boolean só aceita true ou false.', 'Cebraspe / CESPE - DPE-DF');
+(17, 'Redes e Segurança', 'O que indica a notação CIDR /24 em um endereço IPv4 (ex: 192.168.1.0/24)?', 'Que os primeiros 24 bits correspondem à rede (máscara 255.255.255.0), restando 8 bits para hosts.', 'https://datatracker.ietf.org/doc/html/rfc4632');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(25, 'CERTO', TRUE),
-(25, 'ERRADO', FALSE);
+(17, 'Que a rede possui no máximo 24 computadores conectados.', FALSE),
+(17, 'Que os primeiros 24 bits identificam a sub-rede (equivalente à máscara 255.255.255.0).', TRUE),
+(17, 'Que o protocolo utilizado é o IPv6.', FALSE),
+(17, 'Que a velocidade da placa de rede é de 24 Mbps.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(18, 'Redes e Segurança', 'Qual é a função básica do protocolo ARP (Address Resolution Protocol)?', 'Mapear um endereço IP (Camada 3) em um endereço MAC físico (Camada 2) correspondente na LAN.', 'https://datatracker.ietf.org/doc/html/rfc826');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(18, 'Bloquear pacotes de vírus provenientes da internet.', FALSE),
+(18, 'Mapear o endereço IP lógico de um host para o seu endereço físico MAC na rede local.', TRUE),
+(18, 'Sincronizar o relógio dos servidores da rede.', FALSE),
+(18, 'Enviar e-mails de forma automatizada.', FALSE);
 
 -- =============================================
--- SEGURANÇA DA INFORMAÇÃO (26 a 30)
+-- GOVERNANÇA, GESTÃO E LEGISLAÇÃO (19 a 24)
 -- =============================================
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(26, 'Segurança da Informação', 'O pilar da Segurança da Informação que garante que a informação esteja acessível apenas por pessoas ou sistemas devidamente autorizados é denominado:', 'Confidencialidade é o pilar que garante o acesso apenas a quem tem autorização.', 'QUADRIX - CRN-3');
+(19, 'Governança e Legislação', 'Qual o foco principal do framework COBIT (especialmente em sua versão 2019)?', 'Alinhar a Governança e a Gestão da Tecnologia da Informação aos objetivos estratégicos do negócio.', 'https://www.isaca.org/resources/cobit');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(26, 'Disponibilidade', FALSE),
-(26, 'Integridade', FALSE),
-(26, 'Confidencialidade', TRUE),
-(26, 'Autenticidade', FALSE),
-(26, 'Não-repúdio', FALSE);
+(19, 'Especificar a sintaxe de código em linguagens de programação.', FALSE),
+(19, 'Fornecer uma estrutura para Governança e Gestão de TI alinhada ao negócio.', TRUE),
+(19, 'Definir regras para montagem de cabeamento estruturado.', FALSE),
+(19, 'Substituir a legislação de proteção de dados pessoais.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(27, 'Segurança da Informação', 'Tipo de software malicioso (malware) que criptografa os arquivos da vítima e exige o pagamento de um resgate (geralmente em criptomoedas) para liberar o acesso:', 'Ransomware é o malware que sequestra os dados e exige resgate.', 'IBFC - MGS');
+(20, 'Governança e Legislação', 'O que é o Sistema de Valor de Serviço (SVS) na ITIL v4?', 'Uma estrutura modular que demonstra como os componentes da organização trabalham juntos para co-criar valor.', 'https://www.axelos.com/certifications/itil-service-management');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(27, 'Spyware', FALSE),
-(27, 'Ransomware', TRUE),
-(27, 'Keylogger', FALSE),
-(27, 'Adware', FALSE),
-(27, 'Rootkit', FALSE);
+(20, 'Um banco de dados exclusivo para armazenar senhas de usuários.', FALSE),
+(20, 'O modelo da ITIL v4 que descreve a integração de componentes e atividades para criação de valor por meio de serviços.', TRUE),
+(20, 'Um software proprietário para gerenciamento de chamados.', FALSE),
+(20, 'Um método de contabilidade para calcular o custo do hardware.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(28, 'Segurança da Informação', 'O ataque no qual o invasor tenta se passar por uma entidade confiável (como um banco ou serviço conhecido) por e-mail ou páginas falsas para enganar o usuário e roubar senhas é chamado de:', 'Phishing é a técnica de engenharia social que usa falsificação de identidade para roubar dados.', 'FGV - MPERJ');
+(21, 'Governança e Legislação', 'Segundo a LGPD (Lei nº 13.709/2018), o que são Dados Pessoais Sensíveis?', 'Dados sobre origem racial, convicção religiosa, saúde, biometria, genética ou vida sexual.', 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(28, 'Phishing', TRUE),
-(28, 'Denial of Service (DoS)', FALSE),
-(28, 'Man-in-the-Middle', FALSE),
-(28, 'Port Scanning', FALSE),
-(28, 'IP Spoofing', FALSE);
+(21, 'Apenas o número de telefone e o endereço IP do usuário.', FALSE),
+(21, 'Dados sobre origem racial, convicções religiosas, saúde, genética ou biometria.', TRUE),
+(21, 'Qualquer informação pública compartilhada em redes sociais.', FALSE),
+(21, 'Dados corporativos que não possuem relação com pessoas físicas.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(29, 'Segurança da Informação', 'A técnica de segurança que utiliza duas chaves distintas (uma chave pública para criptografar e uma chave privada para descriptografar) é chamada de:', 'A Criptografia Assimétrica usa um par de chaves (pública e privada).', 'VUNESP - Oscar Freire/SP');
+(22, 'Governança e Legislação', 'Quais são os pilares fundamentais da Segurança da Informação segundo a norma ISO/IEC 27001?', 'Confidencialidade, Integridade e Disponibilidade (Tríade CID).', 'https://www.iso.org/isoiec-27001-information-security.html');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(29, 'Criptografia Simétrica', FALSE),
-(29, 'Criptografia Assimétrica', TRUE),
-(29, 'Hashing Simples', FALSE),
-(29, 'Esteganografia', FALSE),
-(29, 'Autenticação Básica', FALSE);
+(22, 'Rapidez, Usabilidade e Custo.', FALSE),
+(22, 'Confidencialidade, Integridade e Disponibilidade.', TRUE),
+(22, 'Autenticidade, Criptografia e Backup.', FALSE),
+(22, 'Hardware, Software e Pessoas.', FALSE);
 
 INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(30, 'Segurança da Informação', 'Um Firewall de rede é um dispositivo de segurança projetado para monitorar e filtrar o tráfego de rede de entrada e saída com base em regras de segurança previamente estabelecidas.', 'A afirmação está correta. O Firewall filtra o tráfego de acordo com regras definidas.', 'Cebraspe / CESPE');
+(23, 'Governança e Legislação', 'Na LGPD, qual a diferença entre os papéis do Controlador e do Operador?', 'O Controlador toma as decisões sobre o tratamento; o Operador realiza o tratamento em nome do Controlador.', 'https://www.gov.br/anpd/pt-br');
 INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(30, 'CERTO', TRUE),
-(30, 'ERRADO', FALSE);
+(23, 'O Operador define as regras da lei e o Controlador apenas executa o backup.', FALSE),
+(23, 'O Controlador toma as decisões relativas ao tratamento dos dados; o Operador trata os dados segundo as orientações do Controlador.', TRUE),
+(23, 'Ambos os termos são sinônimos e possuem exatamente a mesma função jurídica.', FALSE),
+(23, 'O Operador é sempre o titular dos dados pessoais.', FALSE);
 
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(24, 'Governança e Legislação', 'Qual a mudança conceitual marcante introduzida no PMBOK 7ª Edição?', 'Adoção de Princípios de Entrega de Projetos e Domínios de Desempenho no lugar de processos engessados.', 'https://www.pmi.org/pmbok-guide-standards');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(24, 'Proibição total do uso de métodos ágeis em gerenciamento de projetos.', FALSE),
+(24, 'Transição de uma estrutura focada em Processos/Áreas de Conhecimento para Princípios e Domínios de Desempenho.', TRUE),
+(24, 'Tornar obrigatória a utilização do software Microsoft Project em todos os projetos.', FALSE),
+(24, 'Foco exclusivo na fase de encerramento do contrato.', FALSE);
+
+-- =============================================
+-- SISTEMAS OPERACIONAIS E DEVOPS (25 a 30)
+-- =============================================
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(25, 'Sistemas Operacionais', 'O que é Deadlock e quais são as 4 condições necessárias para sua ocorrência?', 'Bloqueio mútuo de processos. As 4 condições de Coffman são: Exclusão Mútua, Posse e Espera, Não Preempção e Espera Circular.', 'https://www.pearson.com/');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(25, 'Desligamento abrupto por falta de energia solar.', FALSE),
+(25, 'Bloqueio permanente de processos devido às condições de Exclusão Mútua, Posse e Espera, Não Preempção e Espera Circular.', TRUE),
+(25, 'Falha no disco rígido por superaquecimento.', FALSE),
+(25, 'Uma técnica de otimização de memória RAM.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(26, 'Sistemas Operacionais', 'Qual a diferença entre Virtualização via Máquina Virtual (VM) e Conteinerização (ex: Docker)?', 'VMs virtualizam o hardware e executam um Guest OS completo; Containers compartilham o Kernel do SO hospedeiro.', 'https://docs.docker.com/get-started/overview/');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(26, 'Containers são mais lentos e consomem mais memória que Máquinas Virtuais.', FALSE),
+(26, 'VMs virtualizam o hardware com um SO Convidado próprio; Containers compartilham o Kernel do SO hospedeiro sendo mais leves.', TRUE),
+(26, 'Não é possível rodar bancos de dados dentro de containers.', FALSE),
+(26, 'VMs só funcionam no Windows e Containers no Linux.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(27, 'Sistemas Operacionais', 'Como funciona o Escalonamento de Processos Preemptivo em um Sistema Operacional?', 'O SO pode interromper um processo em execução para conceder a CPU a outro processo com prioridade/tempo.', 'https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(27, 'Um processo roda até finalizar voluntariamente sem que o SO possa interrompê-lo.', FALSE),
+(27, 'O SO pode interromper temporariamente a execução de um processo para dar vez a outro segundo seu algoritmo.', TRUE),
+(27, 'Os processos são executados estritamente por ordem de tamanho de arquivo.', FALSE),
+(27, 'Só é utilizado quando o computador não possui memória RAM.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(28, 'Sistemas Operacionais', 'No Linux, o que significam as permissões `755` aplicadas via comando `chmod`?', 'Leitura, Escrita e Execução (7) para o Dono; Leitura e Execução (5) para o Grupo e Outros.', 'https://man7.org/linux/man-pages/man1/chmod.1.html');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(28, 'Apenas o administrador pode ler o arquivo.', FALSE),
+(28, 'Dono com permissão total (rwx = 7); Grupo e Outros apenas com leitura e execução (r-x = 5).', TRUE),
+(28, 'O arquivo torna-se oculto para todos os usuários.', FALSE),
+(28, 'Deleta o arquivo após 755 segundos.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(29, 'DevOps', 'No contexto do DevOps, o que significam as práticas de CI/CD?', 'CI é a Integração Contínua (compilação e testes automatizados); CD é a Entrega/Implantação Contínua na produção.', 'https://www.redhat.com/pt-br/topics/devops/what-is-ci-cd');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(29, 'Criptografia Interna e Descriptografia de Dados.', FALSE),
+(29, 'Integração Contínua (automção de builds/testes) e Entrega/Implantação Contínua no ambiente de destino.', TRUE),
+(29, 'Criação de Interfaces e Controle de Diagramas.', FALSE),
+(29, 'Consulta de Informações e Catalogação de Dados.', FALSE);
+
+INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
+(30, 'DevOps', 'Qual é a principal responsabilidade da plataforma Kubernetes (k8s)?', 'Orquestrar e automatizar a implantação, o escalamento e o gerenciamento de aplicações em containers.', 'https://kubernetes.io/docs/concepts/overview/');
+INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
+(30, 'Compilar código Java para plataformas mobile.', FALSE),
+(30, 'Orquestrar e automatizar a implantação, escalamento e operação de containers em cluster.', TRUE),
+(30, 'Substituir a necessidade de escrever queries SQL.', FALSE),
+(30, 'Gerenciar o hardware físico dos datacenters.', FALSE);
+
+-- Ajustar a sequência do PostgreSQL após o insert dos IDs
 SELECT setval('perguntas_id_seq', (SELECT MAX(id) FROM perguntas));
-
-UPDATE perguntas SET fonte_url = 'VUNESP - Câmara de Sertãozinho/SP' WHERE id = 1;
-UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 2;
-UPDATE perguntas SET fonte_url = 'QUADRIX - CRN-3' WHERE id = 3;
-UPDATE perguntas SET fonte_url = 'FGV - IMBEL' WHERE id = 4;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - INSS' WHERE id = 5;
-UPDATE perguntas SET fonte_url = 'FCC - APEX-Brasil' WHERE id = 6;
-UPDATE perguntas SET fonte_url = 'IBFC - MGS' WHERE id = 7;
-UPDATE perguntas SET fonte_url = 'VUNESP - Prefeitura de Osasco/SP' WHERE id = 8;
-UPDATE perguntas SET fonte_url = 'QUADRIX - CRB-6' WHERE id = 9;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - Polícia Federal' WHERE id = 10;
-UPDATE perguntas SET fonte_url = 'FGV - MPERJ' WHERE id = 11;
-UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 12;
-UPDATE perguntas SET fonte_url = 'VUNESP - Prefeitura de São José dos Campos/SP' WHERE id = 13;
-UPDATE perguntas SET fonte_url = 'QUADRIX - CREFONO-4' WHERE id = 14;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - DPE-TO' WHERE id = 15;
-UPDATE perguntas SET fonte_url = 'FCC - TRT-15' WHERE id = 16;
-UPDATE perguntas SET fonte_url = 'FGV - IBGE' WHERE id = 17;
-UPDATE perguntas SET fonte_url = 'IBFC - IF-AM' WHERE id = 18;
-UPDATE perguntas SET fonte_url = 'VUNESP - Câmara de Piracicaba/SP' WHERE id = 19;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - BNDES' WHERE id = 20;
-UPDATE perguntas SET fonte_url = 'FCC - TRT-2' WHERE id = 21;
-UPDATE perguntas SET fonte_url = 'FGV - IMBEL' WHERE id = 22;
-UPDATE perguntas SET fonte_url = 'IBFC - EBSERH' WHERE id = 23;
-UPDATE perguntas SET fonte_url = 'VUNESP - DAE de Jundiaí/SP' WHERE id = 24;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE - DPE-DF' WHERE id = 25;
-UPDATE perguntas SET fonte_url = 'QUADRIX - CRN-3' WHERE id = 26;
-UPDATE perguntas SET fonte_url = 'IBFC - MGS' WHERE id = 27;
-UPDATE perguntas SET fonte_url = 'FGV - MPERJ' WHERE id = 28;
-UPDATE perguntas SET fonte_url = 'VUNESP - Oscar Freire/SP' WHERE id = 29;
-UPDATE perguntas SET fonte_url = 'Cebraspe / CESPE' WHERE id = 30;
-
-
-
