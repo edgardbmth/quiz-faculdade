@@ -1,216 +1,850 @@
-// ==========================================================================
-// 1. MAPEAMENTO DOS ELEMENTOS DO HTML
-// ==========================================================================
-let listaDePerguntas = [];
-let indicePerguntaAtual = 0; // Adicione esta linha também, se não a tiver
+// ==================================================
+// DEV DUEL
+// JAVASCRIPT PRINCIPAL
+// ==================================================
 
-const telaInicio = document.getElementById('tela-inicio');
-const telaJogo = document.getElementById('tela-jogo');
-const telaFinal = document.getElementById('tela-final');
-const formLogin = document.getElementById('form-login');
-const nomeJogadorInput = document.getElementById('nome-jogador');
 
-const textoPergunta = document.getElementById('texto-pergunta');
-const categoriaPergunta = document.getElementById('categoria-pergunta');
-const listaOpcoesContainer = document.getElementById('opcoes-resposta');
-const numPerguntaSpan = document.getElementById('num-pergunta');
-const barraProgresso = document.getElementById('barra-progresso');
+// ==================================================
+// PERGUNTAS
+// ==================================================
 
-const feedbackRespostaSection = document.getElementById('feedback-resposta');
-const feedbackTitulo = document.getElementById('feedback-titulo');
-const feedbackExplicacao = document.getElementById('feedback-explicacao');
-const feedbackFonte = document.getElementById('feedback-fonte');
-const btnProxima = document.getElementById('btn-proxima');
-const pontuacaoFinalTexto = document.getElementById('pontuacao-final');
-const btnReiniciar = document.getElementById('btn-reiniciar');
-const corpoRanking = document.getElementById('corpo-ranking');
+const perguntas = [
 
-// Estados globais da sessão
-let jogadorAtual = "";
+    {
+        pergunta:
+            "Qual linguagem é utilizada para estruturar páginas web?",
+
+        alternativas: [
+            "Python",
+            "HTML",
+            "SQL",
+            "C++"
+        ],
+
+        correta: 1
+    },
+
+    {
+        pergunta:
+            "Qual linguagem é utilizada para estilizar páginas web?",
+
+        alternativas: [
+            "CSS",
+            "Java",
+            "Python",
+            "C"
+        ],
+
+        correta: 0
+    },
+
+    {
+        pergunta:
+            "Qual estrutura pode ser utilizada para repetição em Python?",
+
+        alternativas: [
+            "if",
+            "print",
+            "for",
+            "input"
+        ],
+
+        correta: 2
+    },
+
+    {
+        pergunta:
+            "Qual símbolo é utilizado para comentários de uma linha em Python?",
+
+        alternativas: [
+            "//",
+            "/* */",
+            "#",
+            "<!-- -->"
+        ],
+
+        correta: 2
+    },
+
+    {
+        pergunta:
+            "Qual comando é utilizado para exibir informações no Python?",
+
+        alternativas: [
+            "show()",
+            "print()",
+            "displayText()",
+            "console()"
+        ],
+
+        correta: 1
+    }
+
+];
+
+
+// ==================================================
+// VARIÁVEIS
+// ==================================================
+
+let perguntaAtual = 0;
+
 let pontuacao = 0;
-let respondeuAHRodadaAtual = false;
 
-// Array que receberá os dados do arquivo JSON externo
-let perguntasQuiz = []; 
+let respondeu = false;
 
-// ==========================================================================
-// 1. EVENTO DE INÍCIO DO QUIZ (RQ01)
-// ==========================================================================
-formLogin.addEventListener('submit', function(evento) {
-    evento.preventDefault(); 
-    const nomeDigitado = nomeJogadorInput.value.trim();
 
-    // Trava de segurança: impede o avanço se o nome estiver vazio OU se os dados não carregaram
-    if (nomeDigitado === "" || listaDePerguntas.length === 0) return;
+// ==================================================
+// ELEMENTOS
+// ==================================================
 
-    jogadorAtual = nomeDigitado;
-    telaInicio.classList.add('oculto');
-    telaJogo.classList.remove('oculto');
-    
-    carregarPergunta();
-});
+const modal =
+    document.getElementById("modal");
 
-// ==========================================================================
-// 2. CARREGAR PERGUNTA (Layout Adaptável Dinâmico)
-// ==========================================================================
-function carregarPergunta() {
-    feedbackRespostaSection.classList.add('oculto');
-    respondeuAHRodadaAtual = false; 
-    
-    const dadosPergunta = listaDePerguntas[indicePerguntaAtual];
-    
-    categoriaPergunta.textContent = dadosPergunta.categoria;
-    textoPergunta.textContent = dadosPergunta.enunciado;
-    
-    // CORREÇÃO: Variável duplicada removida e texto do contador corrigido
-    numPerguntaSpan.textContent = `Pergunta ${indicePerguntaAtual + 1} de ${listaDePerguntas.length}`;
-    
-    const porcentagemProgresso = ((indicePerguntaAtual + 1) / listaDePerguntas.length) * 100;
-    barraProgresso.style.width = `${porcentagemProgresso}%`;
-    
-    listaOpcoesContainer.innerHTML = "";
-    
-    // Alinha lado a lado se houver até 2 botões (Certo/Errado) aplicando a classe do CSS Grid
-    if (dadosPergunta.alternativas.length <= 2) {
-        listaOpcoesContainer.classList.add('modo-duas-colunas');
-    } else {
-        listaOpcoesContainer.classList.remove('modo-duas-colunas');
-    }
-    
-    dadosPergunta.alternativas.forEach((alternativa, index) => {
-        const botao = document.createElement('button');
-        botao.classList.add('opcao');
-        
-        // Agora dizemos ao código para puxar exatamente o "texto_alternativa" que vimos no seu print
-        botao.textContent = alternativa.texto_alternativa; 
-        
-        botao.setAttribute('data-index', index);
-        botao.setAttribute('tabindex', '0');
+const modalFundo =
+    document.getElementById("modalFundo");
 
-        botao.addEventListener('click', function() {
-            processarEscolha(index); 
-        });
+const conteudoModal =
+    document.getElementById("conteudoModal");
 
-        listaOpcoesContainer.appendChild(botao);
-    });
-}
+const btnFechar =
+    document.getElementById("btnFechar");
 
-// ==========================================================================
-// 3. PROCESSAR ESCOLHA E FEEDBACK IMEDIATO (RQ06, RQ03, RNF03, RNF08)
-// ==========================================================================
-function processarEscolha(indiceSelecionado) {
-    // CORREÇÃO: Definidas as variáveis que faltavam nesta função para não dar erro
-    const dadosPergunta = listaDePerguntas[indicePerguntaAtual];
-    const todosOsBotoes = document.querySelectorAll('.opcao');
 
-    todosOsBotoes.forEach((btn, idx) => {
-        btn.classList.add('selecionada');
-    });
+// ==================================================
+// EVENTOS DOS BOTÕES
+// ==================================================
 
-    // 1. Verifica se a alternativa que o jogador clicou é a verdadeira
-    const acertou = dadosPergunta.alternativas[indiceSelecionado].eh_correta === true;
+document
+    .getElementById("btnComecar")
+    .addEventListener(
+        "click",
+        iniciarQuiz
+    );
 
-    if (!respondeuAHRodadaAtual) {
-        if (acertou) {
-            pontuacao++;
+
+document
+    .getElementById("btnComoFunciona")
+    .addEventListener(
+        "click",
+        comoFunciona
+    );
+
+
+document
+    .getElementById("btnConhecimento")
+    .addEventListener(
+        "click",
+        abrirConhecimento
+    );
+
+
+document
+    .getElementById("btnDuelo")
+    .addEventListener(
+        "click",
+        iniciarQuiz
+    );
+
+
+document
+    .getElementById("btnRanking")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            event.preventDefault();
+
+            abrirRanking();
+
         }
-        respondeuAHRodadaAtual = true;
-    }
+    );
 
-    feedbackTitulo.classList.remove('feedback-correto', 'feedback-invertido');
 
-    // 2. Dá o feedback visual (Verde ou Vermelho)
-    if (acertou) {
-        feedbackTitulo.textContent = "✔ Resposta Correta!";
-        feedbackTitulo.className = "feedback-correto";
-    } else {
-        feedbackTitulo.textContent = "✖ Resposta Incorreta!";
-        feedbackTitulo.className = "feedback-incorreto";
-    }
+document
+    .getElementById("btnRankingCard")
+    .addEventListener(
+        "click",
+        abrirRanking
+    );
 
-    // 3. Mostra a justificativa e o link correto do banco de dados
-    feedbackExplicacao.textContent = dadosPergunta.justificativa;
-    feedbackFonte.href = dadosPergunta.fonte_url;
-    feedbackFonte.textContent = "Saiba mais na fonte";
 
-    feedbackRespostaSection.classList.remove('oculto');
+btnFechar
+    .addEventListener(
+        "click",
+        fecharModal
+    );
+
+
+modalFundo
+    .addEventListener(
+        "click",
+        fecharModal
+    );
+
+
+// ==================================================
+// ABRIR MODAL
+// ==================================================
+
+function abrirModal() {
+
+    modal.classList.add("ativo");
+
+    document.body.style.overflow = "hidden";
+
 }
 
-// ==========================================================================
-// 4. AVANÇAR E CONCLUIR (RQ03, RQ04, RQ05)
-// ==========================================================================
-btnProxima.addEventListener('click', function() {
-    indicePerguntaAtual++;
-   if (indicePerguntaAtual < listaDePerguntas.length)  {
-        carregarPergunta();
-    } else {
-        finalizarQuiz();
-    }
-});
 
-function finalizarQuiz() {
-    telaJogo.classList.add('oculto');
-    telaFinal.classList.remove('oculto');
-    
-    // CORREÇÃO: alterado perguntasQuiz para listaDePerguntas
-    pontuacaoFinalTexto.innerHTML = `Parabéns, <strong>${jogadorAtual}</strong>!<br>Você pontuou <strong>${pontuacao}</strong> de <strong>${listaDePerguntas.length}</strong> questões.`;
-    
-    gerenciarRankingStorage();
+// ==================================================
+// FECHAR MODAL
+// ==================================================
+
+function fecharModal() {
+
+    modal.classList.remove("ativo");
+
+    document.body.style.overflow = "";
+
 }
 
-function gerenciarRankingStorage() {
-    const novoResultado = { nome: jogadorAtual, pontos: pontuacao };
-    let listaRanking = JSON.parse(sessionStorage.getItem('rankingQuiz')) || [];
-    
-    listaRanking.push(novoResultado);
-    listaRanking.sort((a, b) => b.pontos - a.pontos);
-    sessionStorage.setItem('rankingQuiz', JSON.stringify(listaRanking));
-    
-    corpoRanking.innerHTML = "";
-    listaRanking.forEach((jogador, index) => {
-        const linha = document.createElement('tr');
-        linha.innerHTML = `
-            <td><span class="posicao-num">${index + 1}º</span></td>
-            <td><strong>${jogador.nome}</strong></td>
-            <td><span style="color: var(--neon-cyan); font-weight: bold;">${jogador.pontos} pts</span></td>
-        `;
-        corpoRanking.appendChild(linha);
-    });
+
+// ==================================================
+// COMO FUNCIONA
+// ==================================================
+
+function comoFunciona() {
+
+    abrirModal();
+
+    conteudoModal.innerHTML = `
+
+        <h2>
+            ⓘ Como funciona?
+        </h2>
+
+        <p>
+            O Dev Duel é um quiz de programação
+            criado para testar seus conhecimentos
+            em tecnologia.
+        </p>
+
+        <p>
+            Você responderá perguntas sobre
+            HTML, CSS, Python e outros conceitos
+            de programação.
+        </p>
+
+        <p>
+            Cada resposta correta aumenta
+            sua pontuação.
+        </p>
+
+        <p>
+            No final do desafio você poderá
+            conferir seu resultado.
+        </p>
+
+        <button
+            class="botao-modal"
+            id="btnComecarComoFunciona">
+
+            COMEÇAR AGORA
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById(
+            "btnComecarComoFunciona"
+        )
+        .addEventListener(
+            "click",
+            iniciarQuiz
+        );
+
 }
 
-btnReiniciar.addEventListener('click', function() {
-    indicePerguntaAtual = 0;
+
+// ==================================================
+// CONHECIMENTO
+// ==================================================
+
+function abrirConhecimento() {
+
+    abrirModal();
+
+    conteudoModal.innerHTML = `
+
+        <h2>
+            &lt;/&gt; Conhecimento
+        </h2>
+
+        <p>
+            Nesta área você poderá testar
+            seus conhecimentos sobre
+            programação.
+        </p>
+
+        <p>
+            As perguntas abordam conceitos
+            básicos de desenvolvimento,
+            como HTML, CSS e Python.
+        </p>
+
+        <p>
+            Escolha uma alternativa e veja
+            imediatamente se sua resposta
+            está correta.
+        </p>
+
+        <button
+            class="botao-modal"
+            id="btnIniciarConhecimento">
+
+            INICIAR DESAFIO
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById(
+            "btnIniciarConhecimento"
+        )
+        .addEventListener(
+            "click",
+            iniciarQuiz
+        );
+
+}
+
+
+// ==================================================
+// INICIAR QUIZ
+// ==================================================
+
+function iniciarQuiz() {
+
+    perguntaAtual = 0;
+
     pontuacao = 0;
-    nomeJogadorInput.value = "";
-    telaFinal.classList.add('oculto');
-    telaInicio.classList.remove('oculto');
-});
 
-function exibirPergunta() {
-  const perguntaAtual = listaDePerguntas[indicePerguntaAtual];
-  
-  // CORREÇÃO: texto_da_pergunta alterado para enunciado para não travar
-  textoPergunta.innerText = perguntaAtual.enunciado; 
-  categoriaPergunta.innerText = perguntaAtual.categoria;
-  
-  numPerguntaSpan.innerText = `${indicePerguntaAtual + 1} / ${listaDePerguntas.length}`;
-  listaOpcoesContainer.innerHTML = "";
+    respondeu = false;
+
+    abrirModal();
+
+    mostrarPergunta();
+
 }
 
-async function carregarPerguntas() {
-  try {
-    const resposta = await fetch('http://localhost:3000/api/perguntas');
-    listaDePerguntas = await resposta.json();
-    
-    console.log("Perguntas recebidas do banco:", listaDePerguntas);
-    
-    // Se vieram perguntas do banco, exibe a primeira na tela
-    if (listaDePerguntas.length > 0) {
-      exibirPergunta();
+
+// ==================================================
+// MOSTRAR PERGUNTA
+// ==================================================
+
+function mostrarPergunta() {
+
+    const pergunta =
+        perguntas[perguntaAtual];
+
+
+    respondeu = false;
+
+
+    const porcentagem =
+        (
+            (perguntaAtual + 1)
+            /
+            perguntas.length
+        )
+        *
+        100;
+
+
+    let alternativasHTML = "";
+
+
+    pergunta.alternativas.forEach(
+        function(alternativa, index) {
+
+            alternativasHTML += `
+
+                <button
+                    class="quiz-alternativa"
+                    data-index="${index}">
+
+                    <strong>
+                        ${String.fromCharCode(65 + index)}.
+                    </strong>
+
+                    ${alternativa}
+
+                </button>
+
+            `;
+
+        }
+    );
+
+
+    conteudoModal.innerHTML = `
+
+        <div class="quiz-status">
+
+            Pergunta
+            ${perguntaAtual + 1}
+            de
+            ${perguntas.length}
+
+        </div>
+
+
+        <div class="barra">
+
+            <div
+                style="width: ${porcentagem}%">
+            </div>
+
+        </div>
+
+
+        <div class="quiz-pergunta">
+
+            ${pergunta.pergunta}
+
+        </div>
+
+
+        <div class="quiz-alternativas">
+
+            ${alternativasHTML}
+
+        </div>
+
+    `;
+
+
+    const botoes =
+        document.querySelectorAll(
+            ".quiz-alternativa"
+        );
+
+
+    botoes.forEach(
+        function(botao) {
+
+            botao.addEventListener(
+                "click",
+                function() {
+
+                    const resposta =
+                        Number(
+                            botao.dataset.index
+                        );
+
+                    responder(resposta);
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// ==================================================
+// RESPONDER
+// ==================================================
+
+function responder(resposta) {
+
+    if (respondeu) {
+        return;
     }
-    
-  } catch (erro) {
-    console.error("Erro ao buscar perguntas:", erro);
-  }
+
+
+    respondeu = true;
+
+
+    const pergunta =
+        perguntas[perguntaAtual];
+
+
+    const botoes =
+        document.querySelectorAll(
+            ".quiz-alternativa"
+        );
+
+
+    botoes.forEach(
+        function(botao, index) {
+
+            botao.disabled = true;
+
+
+            if (
+                index ===
+                pergunta.correta
+            ) {
+
+                botao.classList.add(
+                    "correta"
+                );
+
+            }
+
+
+            if (
+                index === resposta &&
+                index !== pergunta.correta
+            ) {
+
+                botao.classList.add(
+                    "errada"
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        resposta ===
+        pergunta.correta
+    ) {
+
+        pontuacao += 10;
+
+    }
+
+
+    setTimeout(
+        function() {
+
+            perguntaAtual++;
+
+
+            if (
+                perguntaAtual <
+                perguntas.length
+            ) {
+
+                mostrarPergunta();
+
+            }
+
+            else {
+
+                mostrarResultado();
+
+            }
+
+        },
+        900
+    );
+
 }
-carregarPerguntas();
+
+
+// ==================================================
+// RESULTADO
+// ==================================================
+
+function mostrarResultado() {
+
+    let mensagem = "";
+
+
+    if (pontuacao === 50) {
+
+        mensagem =
+            "🏆 PERFEITO! Você dominou o Dev Duel!";
+
+    }
+
+    else if (pontuacao >= 30) {
+
+        mensagem =
+            "🔥 MUITO BOM! Você está evoluindo muito!";
+
+    }
+
+    else if (pontuacao >= 20) {
+
+        mensagem =
+            "💻 BOM TRABALHO! Continue praticando!";
+
+    }
+
+    else {
+
+        mensagem =
+            "📚 CONTINUE ESTUDANDO! A prática leva à evolução!";
+
+    }
+
+
+    salvarPontuacao(pontuacao);
+
+
+    conteudoModal.innerHTML = `
+
+        <div class="resultado">
+
+            <div class="icone">
+                🏆
+            </div>
+
+
+            <h2>
+                Desafio Finalizado!
+            </h2>
+
+
+            <p class="pontos">
+                ${pontuacao}/50
+            </p>
+
+
+            <p>
+                ${mensagem}
+            </p>
+
+
+            <button
+                class="botao-modal"
+                id="btnJogarNovamente">
+
+                🔄 JOGAR NOVAMENTE
+
+            </button>
+
+
+            <br>
+
+
+            <button
+                class="btn-secondary"
+                id="btnVoltarInicio"
+                style="margin-top: 15px;">
+
+                VOLTAR PARA INÍCIO
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById(
+            "btnJogarNovamente"
+        )
+        .addEventListener(
+            "click",
+            iniciarQuiz
+        );
+
+
+    document
+        .getElementById(
+            "btnVoltarInicio"
+        )
+        .addEventListener(
+            "click",
+            fecharModal
+        );
+
+}
+
+
+// ==================================================
+// RANKING
+// ==================================================
+
+function abrirRanking() {
+
+    abrirModal();
+
+
+    const melhorPontuacao =
+        localStorage.getItem(
+            "devDuelMelhorPontuacao"
+        );
+
+
+    let resultado = "";
+
+
+    if (melhorPontuacao !== null) {
+
+        resultado = `
+
+            <div class="ranking-item">
+
+                <span>
+                    🧑‍💻 Sua melhor pontuação
+                </span>
+
+                <strong>
+                    ${melhorPontuacao} pts
+                </strong>
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+        resultado = `
+
+            <div class="ranking-item">
+
+                <span>
+                    🧑‍💻 Sua pontuação
+                </span>
+
+                <strong>
+                    Nenhuma ainda
+                </strong>
+
+            </div>
+
+        `;
+
+    }
+
+
+    conteudoModal.innerHTML = `
+
+        <div class="resultado">
+
+            <div class="icone">
+                🏆
+            </div>
+
+            <h2>
+                Ranking
+            </h2>
+
+        </div>
+
+
+        ${resultado}
+
+
+        <div class="ranking-item">
+
+            <span>
+                🥇 Jogador 1
+            </span>
+
+            <strong>
+                50 pts
+            </strong>
+
+        </div>
+
+
+        <div class="ranking-item">
+
+            <span>
+                🥈 Jogador 2
+            </span>
+
+            <strong>
+                40 pts
+            </strong>
+
+        </div>
+
+
+        <div class="ranking-item">
+
+            <span>
+                🥉 Jogador 3
+            </span>
+
+            <strong>
+                30 pts
+            </strong>
+
+        </div>
+
+
+        <button
+            class="botao-modal"
+            id="btnFecharRanking">
+
+            FECHAR
+
+        </button>
+
+    `;
+
+
+    document
+        .getElementById(
+            "btnFecharRanking"
+        )
+        .addEventListener(
+            "click",
+            fecharModal
+        );
+
+}
+
+
+// ==================================================
+// SALVAR MELHOR PONTUAÇÃO
+// ==================================================
+
+function salvarPontuacao(pontos) {
+
+    const atual =
+        Number(
+            localStorage.getItem(
+                "devDuelMelhorPontuacao"
+            )
+        ) || 0;
+
+
+    if (pontos > atual) {
+
+        localStorage.setItem(
+            "devDuelMelhorPontuacao",
+            pontos
+        );
+
+    }
+
+}
+
+
+// ==================================================
+// TECLA ESC
+// ==================================================
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            fecharModal();
+
+        }
+
+    }
+);
