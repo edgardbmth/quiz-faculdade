@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Dev Duel - Quiz de Programação">
+
+    <title>Dev Duel | Quiz de Programação</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ==================================================
+         FUNDO ANIMADO
+    ================================================== -->
+
+    <div class="animated-background">
+
+        <div class="grid"></div>
+
+        <div class="glow glow-purple"></div>
+
+        <div class="glow glow-blue"></div>
+
+        <div class="particles">
+
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+        <div class="code-lines">
+
+            <span>&lt;/&gt; const developer = true;</span>
+
+            <span>function startQuiz() { }</span>
+
+            <span>if (score &gt; 80) victory();</span>
+
+            <span>while (learning) improve();</span>
+
+            <span>console.log("Dev Duel");</span>
+
+            <span>return challenge;</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         CABEÇALHO
+    ================================================== -->
+
+    <header class="header">
+
+        <div class="logo">
+            &lt; DEV <span>DUEL</span> /&gt;
+        </div>
+
+        <nav>
+
+            <a href="#inicio">
+                Início
+            </a>
+
+            <a href="#" id="btnDesafios">
+                Desafios
+            </a>
+
+            <a href="#" id="btnRanking">
+                Ranking
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ==================================================
+         CONTEÚDO PRINCIPAL
+    ================================================== -->
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero" id="inicio">
+
+            <div class="hero-content">
+
+                <div class="badge">
+
+                    <span class="lightning">
+                        ⚡
+                    </span>
+
+                    QUIZ DE PROGRAMAÇÃO
+
+                </div>
+
+
+                <h1>
+                    DEV
+                    <span>
+                        DUEL
+                    </span>
+                </h1>
+
+
+                <p>
+
+                    Teste seus conhecimentos em programação,
+                    enfrente desafios e descubra até onde
+                    suas habilidades podem chegar.
+
+                </p>
+
+
+                <!-- BOTÕES PRINCIPAIS -->
+
+                <div class="buttons">
+
+                    <button
+                        class="btn-primary"
+                        id="btnComecar">
+
+                        ▶ COMEÇAR O DESAFIO
+
+                    </button>
+
+
+                    <button
+                        class="btn-secondary"
+                        id="btnComoFunciona">
+
+                        ⓘ COMO FUNCIONA
+
+                    </button>
+
+                </div>
+
+
+                <div class="hero-info">
+
+                    <span>●</span>
+
+                    Desafie seus conhecimentos
+
+                    <span>•</span>
+
+                    Evolua suas habilidades
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             CARDS
+        ================================================== -->
+
+        <section class="cards">
+
+
+            <!-- CONHECIMENTO -->
+
+            <button
+                class="card"
+                id="btnConhecimento">
+
+                <div class="card-icon">
+                    &lt;/&gt;
+                </div>
+
+                <h3>
+                    Conhecimento
+                </h3>
+
+                <p>
+                    Teste seus conhecimentos
+                    sobre programação e tecnologia.
+                </p>
+
+                <div class="card-line"></div>
+
+            </button>
+
+
+            <!-- DUELO -->
+
+            <button
+                class="card"
+                id="btnDuelo">
+
+                <div class="card-icon">
+                    ⚔
+                </div>
+
+                <h3>
+                    Duelo
+                </h3>
+
+                <p>
+                    Enfrente desafios e tente
+                    alcançar a maior pontuação.
+                </p>
+
+                <div class="card-line"></div>
+
+            </button>
+
+
+            <!-- RANKING -->
+
+            <button
+                class="card"
+                id="btnRankingCard">
+
+                <div class="card-icon">
+                    🏆
+                </div>
+
+                <h3>
+                    Ranking
+                </h3>
+
+                <p>
+                    Acompanhe seus resultados
+                    e sua evolução.
+                </p>
+
+                <div class="card-line"></div>
+
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==================================================
+         MODAL
+    ================================================== -->
+
+    <div
+        class="modal"
+        id="modal">
+
+        <div
+            class="modal-fundo"
+            id="modalFundo">
+        </div>
+
+
+        <div class="modal-caixa">
+
+            <button
+                class="fechar"
+                id="btnFechar">
+
+                ×
+
+            </button>
+
+
+            <div id="conteudoModal"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         JAVASCRIPT
+    ================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
