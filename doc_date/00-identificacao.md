@@ -1,11 +1,11 @@
-# Tech Trivia — Identificação do Projeto
+# Duel Dev (Tech Trivia) — Identificação do Projeto
 
 | Campo       | Preenchimento |
 | ----------- | ------------- |
-| Equipe      |  |
-| Integrantes | [Nome dos integrantes do seu grupo] |
-| Repositório | [Link do repositório GitHub] |
-| Data        | [Data de entrega] |
+| Equipe      | Grupo 6 |
+| Integrantes | Higor da Silva, Lucas Rodrigues e Enzo Moreira |
+| Repositório | **Backend / DB:** https://github.com/lchaves06/duelquiz-backend<br>**Frontend:** https://github.com/edgardbmth/quiz-faculdade |
+| Data        | M1: 04/10/2026 |
 
 ---
 
