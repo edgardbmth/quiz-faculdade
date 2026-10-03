@@ -2,7 +2,7 @@
 
 | Campo       | Preenchimento |
 | ----------- | ------------- |
-| Equipe      | Dev Duel |
+| Equipe      |  |
 | Integrantes | [Nome dos integrantes do seu grupo] |
 | Repositório | [Link do repositório GitHub] |
 | Data        | [Data de entrega] |
