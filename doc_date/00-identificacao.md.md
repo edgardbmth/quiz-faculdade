@@ -2,13 +2,13 @@
 
 ## 1. Introdução e Contexto
 
-O **Duel Dev** é um aplicativo web interativo de treino e fixação de conhecimentos na área de Tecnologia da Informação. O objetivo deste banco de dados (hospedado no PostgreSQL via Supabase) é armazenar e gerenciar de forma estruturada as questões, suas categorias temáticas (ex: Hardware e Arquitetura, Redes de Computadores, Lógica e Programação), as opções de resposta, os gabaritos corretos e as justificativas explicativas com fontes bibliográficas. A aplicação consome esses dados por meio de uma API REST em Node.js (hospedada no Render) para permitir que os estudantes realizem simulados gamificados e acompanhem seu desempenho em tempo real.
+O **Duel Dev** é um aplicativo web interativo de treino e fixação de conhecimentos, voltado para a preparação de candidatos em questões de **Informática para Concursos Públicos**. Diferente dos simulados tradicionais, o sistema adota uma abordagem de **gamificação** projetada para estimular a curiosidade, o aprendizado ativo e a retenção do conhecimento. O banco de dados (hospedado no PostgreSQL via Supabase) armazena e gerencia de forma estruturada as questões de exames oficiais, suas categorias temáticas (ex: Hardware e Arquitetura, Redes de Computadores, Lógica e Programação), as opções de resposta, os gabaritos corretos e as justificativas explicativas com fontes bibliográficas. A aplicação consome esses dados por meio de uma API REST em Node.js (hospedada no Render) para alimentar as partidas interativas e atualizar os resultados em tempo real.
 
 ### O que o sistema faz e o que NÃO faz
 
 | O que o sistema faz | O que o sistema NÃO faz |
 | :--- | :--- |
-| Armazena perguntas divididas por categorias temáticas | Não armazena senhas ou dados de autenticação de usuários |
+| Armazena perguntas de concursos divididas por categorias temáticas | Não armazena senhas ou dados de autenticação de usuários |
 | Armazena até 5 alternativas por questão e indica a correta (`eh_correta`) | Não realiza geração automática de perguntas por Inteligência Artificial |
 | Disponibiliza a API `/api/questions` para consumo dinâmico do front-end | Não exige a instalação de softwares ou dependências na máquina do jogador |
 | Registra explicações, justificativas e links de fontes de referência | Não guarda histórico permanente de partidas em banco de dados global |
@@ -18,20 +18,20 @@ O **Duel Dev** é um aplicativo web interativo de treino e fixação de conhecim
 
 | Usuário | Papel no Sistema |
 | :--- | :--- |
-| **Jogador / Estudante** | Informa seu nome, responde às questões de múltipla escolha, recebe feedback imediato do gabarito com justificativa e visualiza sua pontuação no ranking da sessão. |
-| **Administrador / Professor** | Mantém a base de dados via inserções/scripts SQL no banco (cadastrando e atualizando perguntas, categorias e alternativas). |
+| **Jogador / Concursando** | Informa seu nome, responde às questões de múltipla escolha de concursos, recebe feedback imediato do gabarito com justificativa e visualiza sua pontuação no ranking da sessão. |
+| **Administrador / Professor** | Mantém a base de dados via inserções/scripts SQL no banco (cadastrando e atualizando perguntas de bancas examinadoras, categorias e alternativas). |
 
 ---
 
 ## 2. Minimundo
 
-O **Duel Dev** é um aplicativo web interativo de treino e fixação de conhecimentos na área de Tecnologia da Informação. Utilizando elementos de gamificação, o sistema transforma a revisão de conteúdos técnicos em uma experiência dinâmica, na qual o estudante testa seus conhecimentos, acompanha seu desempenho pontual e compete em um ranking de sessão.
+O **Duel Dev** é uma plataforma interativa de estudos que utiliza elementos de gamificação para transformar a preparação para concursos públicos de Tecnologia da Informação em uma experiência envolvente e estimulante. A proposta central do sistema é despertar a curiosidade do estudante e promover o aprendizado ativo: ao responder às questões, o candidato recebe feedback imediato com justificativas detalhadas e links de referência, incentivando a investigação contínua dos temas abordados.
 
-Cada pergunta armazenada no sistema possui um enunciado técnico, pertence a uma categoria temática (como "Hardware e Arquitetura", "Redes de Computadores" ou "Lógica de Programação") e conta com uma explicação detalhada do gabarito oficial, acompanhada por um link de referência para aprofundamento.
+Cada pergunta armazenada no sistema possui um enunciado técnico baseado em provas oficiais, pertence a uma categoria temática (como "Hardware e Arquitetura", "Redes de Computadores" ou "Lógica de Programação") e conta com uma explicação aprofundada do gabarito oficial, acompanhada por um link de referência bibliográfica.
 
-Para garantir a dinamicidade das partidas e evitar a simples memorização da posição dos botões, cada pergunta disponibiliza alternativas de múltipla escolha que são embaralhadas aleatoriamente a cada rodada. Cada alternativa possui seu texto e um indicador lógico (`eh_correta`) que define a resposta correta.
+Para manter o dinamismo das partidas e desafiar a retenção real do conteúdo (evitando a simples memorização da posição das opções), cada pergunta disponibiliza alternativas de múltipla escolha que são embaralhadas aleatoriamente a cada rodada. Cada alternativa possui seu texto e um indicador lógico (`eh_correta`) que define a resposta certa.
 
-Antes de iniciar a rodada, o jogador informa seu nome para identificação no jogo. Durante a partida, a aplicação valida as respostas enviadas, contabiliza os pontos obtidos, exibe o feedback pedagógico com a justificativa técnica e atualiza a tabela de classificação (Ranking da Sessão).
+Antes de iniciar a rodada, o jogador informa seu nome para identificação no jogo. Durante a partida, a aplicação valida as respostas enviadas, contabiliza os pontos obtidos, exibe o feedback pedagógico com a justificativa técnica e atualiza a tabela de classificação (Ranking da Sessão), estimulando a competitividade saudável e a busca pela melhoria contínua.
 
 ---
 
