@@ -35,6 +35,21 @@ app.post('/api/pontuacao', async (req, res) => {
   res.json({ mensagem: 'Pontuação salva com sucesso!' });
 });
 
+app.get('/api/ranking', async (req, res) => {
+  // Puxa as 5 melhores pontuações do banco de dados, da maior para a menor
+  const { data, error } = await supabase
+    .from('pontuacoes')
+    .select('*')
+    .order('pontos', { ascending: false })
+    .limit(5);
+
+  if (error) {
+    return res.status(500).json({ erro: error.message });
+  }
+
+  res.json(data);
+});
+
 app.listen(porta, () => {
   console.log(`Servidor rodando em http://localhost:${porta}`);
   console.log('Banco de dados configurado!');
