@@ -12,7 +12,6 @@ Este repositório contém o código-fonte de um jogo de Quiz interativo.
 * Higor da Silva
 * Enzo Moreira
 * José Renato Bettuz
-* Lucas Rodrigues
 
 ## 🛠️ Tecnologias Utilizadas
 O projeto está sendo desenvolvido utilizando uma arquitetura Full Stack com as seguintes tecnologias:
