@@ -1,273 +1,683 @@
-CREATE TABLE perguntas (
+-- ============================================================
+-- SCRIPT DE CRIAÇÃO E POVOAMENTO - TECHQUIZ / TECH TRIVIA
+-- Banco de Dados: PostgreSQL
+-- ============================================================
+
+-- Tabela de Categorias (Temas da Tecnologia)
+CREATE TABLE categorias (
     id SERIAL PRIMARY KEY,
-    categoria VARCHAR(100) NOT NULL,
-    enunciado TEXT NOT NULL,
-    justificativa TEXT NOT NULL,
-    fonte_url TEXT NOT NULL
+    nome VARCHAR(100) NOT NULL UNIQUE
 );
 
--- 1. Limpeza das tabelas existentes e reinício dos IDs
-TRUNCATE TABLE alternativas, perguntas RESTART IDENTITY CASCADE;
+-- Tabela de Perguntas
+CREATE TABLE perguntas (
+    id SERIAL PRIMARY KEY,
+    categoria_id INT NOT NULL REFERENCES categorias(id) ON DELETE CASCADE,
+    enunciado TEXT NOT NULL,
+    contexto TEXT, -- Contexto/fato introduzido antes das opções
+    explicacao TEXT NOT NULL, -- Explicação do acerto/erro
+    fonte_nome VARCHAR(150) NOT NULL, -- Nome do site/instituição da fonte
+    fonte_url TEXT NOT NULL -- Link direto para a fonte oficial
+);
 
--- =============================================
--- ENGENHARIA DE SOFTWARE E DESENVOLVIMENTO (1 a 6)
--- =============================================
+-- Tabela de Opções/Alternativas (Com indicação de resposta correta)
+CREATE TABLE opcoes (
+    id SERIAL PRIMARY KEY,
+    pergunta_id INT NOT NULL REFERENCES perguntas(id) ON DELETE CASCADE,
+    texto_opcao VARCHAR(50) NOT NULL,
+    eh_correta BOOLEAN NOT NULL DEFAULT FALSE
+);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(1, 'Engenharia de Software', 'Qual é o papel principal das Histórias de Usuário (User Stories) no framework Scrum?', 'Uma História de Usuário descreve uma funcionalidade do ponto de vista do usuário final, servindo como item do Product Backlog para expressar valor de negócio.', 'https://scrumguides.org/scrum-guide.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(1, 'Definir a arquitetura física dos servidores de banco de dados.', FALSE),
-(1, 'Descrever uma funcionalidade sob a perspectiva do usuário para gerar valor de negócio.', TRUE),
-(1, 'Mapear a alocação de memória RAM dos componentes do sistema.', FALSE),
-(1, 'Substituir os testes unitários da aplicação.', FALSE);
+-- Tabela de Usuários (Para apoio ao RQ01)
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(2, 'Engenharia de Software', 'Qual é a diferença fundamental entre Testes de Unidade e Testes de Integração?', 'Testes de Unidade validam a menor unidade isolada do código (com mocks nas dependências), enquanto Testes de Integração verificam a comunicação entre múltiplos módulos.', 'https://martinfowler.com/articles/practical-test-pyramid.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(2, 'Testes de Unidade testam o sistema completo e Testes de Integração testam apenas funções isoladas.', FALSE),
-(2, 'Testes de Unidade validam módulos isoladamente; Testes de Integração validam a interface e comunicação entre os módulos.', TRUE),
-(2, 'Testes de Integração são executados manualmente pelo usuário final.', FALSE),
-(2, 'Não há diferença técnica entre os dois tipos de teste.', FALSE);
+-- Tabela de Pontuações (Para apoio ao RQ03 e RQ04)
+CREATE TABLE pontuacoes (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    pontos INT NOT NULL,
+    data_sessao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(3, 'Engenharia de Software', 'O que estabelece o Princípio da Inversão de Dependência (DIP) do SOLID?', 'Módulos de alto nível não devem depender de módulos de baixo nível; ambos devem depender de abstrações (interfaces ou classes abstratas).', 'https://www.digitalocean.com/community/conceptual-articles/s-o-l-i-d-the-first-five-principles-of-object-oriented-design-pt');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(3, 'Classes filhas nunca devem herdar métodos da classe pai.', FALSE),
-(3, 'Módulos de alto e baixo nível devem depender de abstrações, reduzindo o acoplamento.', TRUE),
-(3, 'Uma classe deve ter múltiplas responsabilidades na aplicação.', FALSE),
-(3, 'Todas as variáveis do programa devem ser globais.', FALSE);
+-- ============================================================
+-- 2. INSERÇÃO DOS DADOS (POPULANDO O BANCO DE DADOS)
+-- ============================================================
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(4, 'Engenharia de Software', 'No modelo MPS.BR, qual é a finalidade dos Níveis de Maturidade (de G a A)?', 'Avaliar e atestar a capacidade e evolução dos processos de software de uma organização.', 'https://softex.br/mpsbr/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(4, 'Medir a velocidade de processamento do hardware.', FALSE),
-(4, 'Graduar a capacidade e maturidade dos processos de software da organização.', TRUE),
-(4, 'Definir o nível de criptografia das conexões de rede.', FALSE),
-(4, 'Classificar a licença comercial dos softwares produzidos.', FALSE);
+-- Inserção das Categorias
+INSERT INTO categorias (id, nome) VALUES 
+(1, 'História da Computação'),
+(2, 'Arquitetura de Sistemas & Redes'),
+(3, 'Desenvolvimento de Software & Algoritmos'),
+(4, 'Banco de Dados & Engenharia de Dados'),
+(5, 'Nuvem, DevOps & Infraestrutura'),
+(6, 'Cibersegurança & Criptografia'),
+(7, 'Inteligência Artificial & Dados'),
+(8, 'Testes & Qualidade de Software'),
+(9, 'Engenharia de Desempenho & Web'),
+(10, 'Sistemas Operacionais & Conceitos');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(5, 'Engenharia de Software', 'No diagrama de classes UML, qual a diferença entre Agregação e Composição?', 'Na Agregação a parte existe independentemente do todo; na Composição a destruição do todo implica na destruição das partes.', 'https://www.uml.org/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(5, 'Na Agregação a vida do filho está acoplada ao pai; na Composição o filho sobrevive sem o pai.', FALSE),
-(5, 'Na Agregação o objeto parte pode existir sem o todo; na Composição o objeto parte depende do ciclo de vida do todo.', TRUE),
-(5, 'Agregação só é usada em bancos relacionais e Composição em NoSQL.', FALSE),
-(5, 'Ambas possuem exatamente a mesma semântica na UML.', FALSE);
+-- ------------------------------------------------------------
+-- INSERÇÃO DAS PERGUNTAS E OPÇÕES (50 TRIVIAS TÉCNICAS)
+-- ------------------------------------------------------------
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(6, 'Engenharia de Software', 'Qual é a característica principal da Arquitetura de Microsserviços em comparação com o Monolito?', 'Decompor a aplicação em serviços pequenos, autônomos, fracamente acoplados e implantáveis de forma independente.', 'https://learn.microsoft.com/pt-br/azure/architecture/guide/architecture-styles/microservices');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(6, 'Unificar todo o código fonte em uma única base de dados centralizada e indivisível.', FALSE),
-(6, 'Dividir a aplicação em serviços independentes que podem ser implantados e escalados individualmente.', TRUE),
-(6, 'Eliminar o uso de APIs HTTP/REST nas comunicações do sistema.', FALSE),
-(6, 'Obrigá-los a utilizar o mesmo banco de dados relacional para todos os serviços.', FALSE);
+-- Pergunta 1 (Baseada no Protótipo do Documento de Requisitos)
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(1, 1, 'O primeiro bug de computador foi realmente um inseto de verdade?', 
+'Em 1947, técnicos trabalhando no computador Harvard Mark II encontraram uma mariposa presa em um relé e registraram o episódio no diário da equipe.',
+'O episódio realmente aconteceu em 9 de setembro de 1947: uma mariposa foi encontrada presa no Relé 70 do Harvard Mark II e colada com fita adesiva na página do diário de operações, ao lado da frase "first actual case of bug being found". O caderno original está hoje preservado no Smithsonian.',
+'National Museum of American History (Smithsonian)',
+'https://americanhistory.si.edu/collections/search/object/nmah_334663');
 
--- =============================================
--- BANCO DE DADOS (7 a 12)
--- =============================================
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(1, 'CERTO', TRUE),
+(1, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(7, 'Banco de Dados', 'O que representam as propriedades ACID em SGBDs Relacionais?', 'Atomicidade, Consistência, Isolamento e Durabilidade — garantias para transações confiáveis.', 'https://www.postgresql.org/docs/current/tutorial-transactions.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(7, 'Acesso, Controle, Integridade e Desempenho.', FALSE),
-(7, 'Atomicidade, Consistência, Isolamento e Durabilidade.', TRUE),
-(7, 'Autenticação, Criptografia, Identificação e Difusão.', FALSE),
-(7, 'Agrupamento, Consulta, Inserção e Deleção.', FALSE);
+-- Pergunta 2
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(2, 2, 'O Teorema CAP permite que um sistema distribuído garanta Consistência, Disponibilidade e Tolerância a Partições ao mesmo tempo durante falhas?',
+'Sistemas distribuídos precisam lidar constantemente com partições e falhas na rede.',
+'O Teorema CAP demonstra matematicamente que, na presença de uma partição de rede (P), um sistema distribuído deve escolher entre manter a Consistência (C) ou a Disponibilidade (A), não sendo possível garantir ambos simultaneamente.',
+'Martin Kleppmann Blog',
+'https://martin.kleppmann.com/2015/09/17/critique-of-the-cap-theorem.html');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(8, 'Banco de Dados', 'Qual a regra principal para que uma tabela esteja na Terceira Forma Normal (3FN)?', 'Estar na 2FN e não possuir dependências funcionais transitivas entre atributos não-chave.', 'https://docs.oracle.com/en/database/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(8, 'Possuir pelo menos duas chaves estrangeiras cadastradas.', FALSE),
-(8, 'Estar na 2FN e não apresentar dependências transitivas entre colunas não-chave.', TRUE),
-(8, 'Permitir campos com múltiplos valores separados por vírgula.', FALSE),
-(8, 'Ter todos os campos indexados no B-Tree.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(2, 'CERTO', FALSE),
+(2, 'ERRADO', TRUE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(9, 'Banco de Dados', 'Qual a diferença entre as cláusulas WHERE e HAVING em comandos SQL?', 'WHERE filtra linhas antes do agrupamento; HAVING filtra os grupos resultantes das funções de agregação.', 'https://www.w3schools.com/sql/sql_having.asp');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(9, 'WHERE é usado em bancos NoSQL e HAVING em bancos SQL.', FALSE),
-(9, 'WHERE filtra registros individuais antes do GROUP BY; HAVING filtra dados agregados após o GROUP BY.', TRUE),
-(9, 'HAVING é executado primeiro que o WHERE em todos os casos.', FALSE),
-(9, 'Ambas as cláusulas desempenham exatamente a mesma função.', FALSE);
+-- Pergunta 3
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(3, 2, 'O protocolo gRPC utiliza HTTP/2 e Protocol Buffers para obter melhor desempenho que o REST/JSON tradicional?',
+'Modernas arquiteturas de microserviços buscam alternativas mais eficientes ao tráfego JSON sobre HTTP/1.1.',
+'O gRPC utiliza HTTP/2 para multiplexação de conexões e Protocol Buffers (binário) como linguagem de definição de interface, garantindo menor tamanho de payload e maior velocidade no transporte de dados.',
+'gRPC Official Documentation',
+'https://grpc.io/about/');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(10, 'Banco de Dados', 'Qual o principal benefício e o custo de se criar um Índice (ex: B-Tree) em uma tabela?', 'Acelera a velocidade das consultas de leitura (SELECT), mas adiciona custo em disco e sobrecarga de escrita (INSERT/UPDATE/DELETE).', 'https://www.postgresql.org/docs/current/indexes.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(10, 'Aumenta o tempo de resposta das consultas e reduz o tamanho do banco em disco.', FALSE),
-(10, 'Acelera consultas de busca, porém exige mais espaço em disco e torna modificações (escrita) ligeiramente mais lentas.', TRUE),
-(10, 'Garante que os dados fiquem criptografados automaticamente.', FALSE),
-(10, 'Impede a ocorrência de deadlocks na tabela.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(3, 'CERTO', TRUE),
+(3, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(11, 'Banco de Dados', 'De acordo com o Teorema CAP, quais propriedades um sistema distribuído não consegue garantir 100% simultaneamente?', 'Consistência (Consistency), Disponibilidade (Availability) e Tolerância a Partição (Partition Tolerance).', 'https://aws.amazon.com/pt/nosql/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(11, 'Criptografia, Autenticação e Privacidade.', FALSE),
-(11, 'Consistência, Disponibilidade e Tolerância a Partições de Rede.', TRUE),
-(11, 'Concorrência, Algoritmos e Processamento.', FALSE),
-(11, 'Compressão, Armazenamento e Performance.', FALSE);
+-- Pergunta 4
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(4, 2, 'No Handshake de 3 vias do TCP, o primeiro pacote enviado pelo cliente é o ACK?',
+'O estabelecimento de conexão orientada a transporte no protocolo TCP exige uma sequência específica de sincronização.',
+'A sequência correta do Handshake de 3 vias do TCP inicia com o cliente enviando SYN, o servidor responde com SYN-ACK, e finaliza com o cliente enviando ACK.',
+'IETF RFC 793 Specification',
+'https://datatracker.ietf.org/doc/html/rfc793');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(12, 'Banco de Dados', 'Qual a diferença entre os comandos SQL TRUNCATE TABLE e DELETE FROM?', 'DELETE é DML, apaga linhas registrando logs individualmente e permite WHERE; TRUNCATE é DDL, limpa a tabela desalocando páginas de forma rápida.', 'https://learn.microsoft.com/pt-br/sql/t-sql/statements/truncate-table-transact-sql');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(12, 'TRUNCATE apaga o banco de dados inteiro; DELETE apaga apenas o schema da tabela.', FALSE),
-(12, 'DELETE apaga linhas permitindo filtro WHERE com registro linha a linha; TRUNCATE reefetua o esvaziamento completo da tabela via DDL de forma rápida.', TRUE),
-(12, 'Não há nenhuma diferença técnica entre TRUNCATE e DELETE.', FALSE),
-(12, 'TRUNCATE só funciona se a tabela tiver chave estrangeira ativa.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(4, 'CERTO', FALSE),
+(4, 'ERRADO', TRUE);
 
--- =============================================
--- REDES E SEGURANÇA DA INFORMAÇÃO (13 a 18)
--- =============================================
+-- Pergunta 5
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(5, 2, 'O servidor Root DNS devolve diretamente o endereço IP final do site solicitado pelo usuário?',
+'A resolução de nomes de domínio envolve uma hierarquia de servidores em cadeia.',
+'Os Root Servers não conhecem os IPs finais dos sites; eles apenas direcionam o resolvedor para os servidores autoritativos do TLD correspondente (como .com ou .org).',
+'Cloudflare Learning Center',
+'https://www.cloudflare.com/learning/dns/what-is-dns/');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(13, 'Redes e Segurança', 'Qual a diferença fundamental na Camada de Transporte entre os protocolos TCP e UDP?', 'O TCP é orientado à conexão com garantia de entrega e ordem; o UDP é não orientado à conexão e focado em baixa latência.', 'https://datatracker.ietf.org/doc/html/rfc793');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(13, 'UDP garante a entrega de 100% dos pacotes e o TCP não faz verificação de erros.', FALSE),
-(13, 'TCP é orientado à conexão e garante a entrega dos pacotes; UDP não é orientado à conexão e foca em velocidade.', TRUE),
-(13, 'TCP opera na Camada de Aplicação e UDP na Camada Física.', FALSE),
-(13, 'Ambos possuem exatamente as mesmas características de controle de fluxo.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(5, 'CERTO', FALSE),
+(5, 'ERRADO', TRUE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(14, 'Redes e Segurança', 'O que caracteriza um ataque do tipo DDoS (Distributed Denial of Service)?', 'Negação de serviço causada pela sobrecarga de recursos do alvo por múltiplas origens (botnet).', 'https://www.cloudflare.com/pt-br/learning/ddos/what-is-a-ddos-attack/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(14, 'Injeção de código SQL em formulários web.', FALSE),
-(14, 'Inundação maliciosa de tráfego coordenada a partir de múltiplos dispositivos para indisponibilizar um serviço.', TRUE),
-(14, 'Roubo de senhas por meio de chamadas telefônicas falsas.', FALSE),
-(14, 'Criptografia não autorizada do sistema de arquivos.', FALSE);
+-- Pergunta 6
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(6, 2, 'O protocolo TLS 1.3 reduziu o tempo de negociação no handshake para 1 RTT (Round Trip Time)?',
+'A evolução do protocolo TLS buscou reduzir a latência de criptografia na web.',
+'O TLS 1.3 eliminou etapas redundantes de negociação de algoritmos, permitindo que o handshake seja concluído em apenas 1 RTT contra os 2 RTTs do TLS 1.2.',
+'IETF RFC 8446 Specification',
+'https://datatracker.ietf.org/doc/html/rfc8446');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(15, 'Redes e Segurança', 'Na Criptografia Assimétrica, qual chave é usada para Criptografar e qual é usada para Assinar digitalmente?', 'Criptografa-se com a Chave Pública do destinatário; assina-se com a Chave Privada do remetente.', 'https://pkiconsortium.org/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(15, 'Criptografa-se com a chave privada e assina-se com o endereço IP.', FALSE),
-(15, 'Para confidencialidade usa-se a Chave Pública do destinatário; para Assinatura Digital usa-se a Chave Privada do remetente.', TRUE),
-(15, 'Ambas as operações utilizam obrigatoriamente a mesma chave simétrica de 128 bits.', FALSE),
-(15, 'Chaves públicas não podem ser compartilhadas com terceiros.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(6, 'CERTO', TRUE),
+(6, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(16, 'Redes e Segurança', 'Qual o papel do protocolo TLS (Transport Layer Security) em conexões HTTPS?', 'Prover confidencialidade, integridade e autenticação através do estabelecimento de um canal criptografado.', 'https://datatracker.ietf.org/doc/html/rfc8446');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(16, 'Aumentar a velocidade do download compactando imagens.', FALSE),
-(16, 'Garantir a confidencialidade e integridade da comunicação via criptografia na camada de transporte.', TRUE),
-(16, 'Converter endereços IP em nomes de domínio legíveis.', FALSE),
-(16, 'Substituir o uso de roteadores na rede local.', FALSE);
+-- Pergunta 7
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(7, 3, 'Concorrência e Paralelismo são sinônimos e dependem obrigatoriamente de múltiplos núcleos de CPU?',
+'Diferentes abordagens são usadas para lidar com a execução de múltiplas tarefas na programação.',
+'Concorrência é sobre a estrutura do código para lidar com múltiplas tarefas simultâneas (mesmo em 1 único núcleo), enquanto Paralelismo é a execução física e simultânea de tarefas em múltiplos núcleos.',
+'Go Dev Talks (Rob Pike)',
+'https://go.dev/talks/2012/waza.slide');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(17, 'Redes e Segurança', 'O que indica a notação CIDR /24 em um endereço IPv4 (ex: 192.168.1.0/24)?', 'Que os primeiros 24 bits correspondem à rede (máscara 255.255.255.0), restando 8 bits para hosts.', 'https://datatracker.ietf.org/doc/html/rfc4632');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(17, 'Que a rede possui no máximo 24 computadores conectados.', FALSE),
-(17, 'Que os primeiros 24 bits identificam a sub-rede (equivalente à máscara 255.255.255.0).', TRUE),
-(17, 'Que o protocolo utilizado é o IPv6.', FALSE),
-(17, 'Que a velocidade da placa de rede é de 24 Mbps.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(7, 'CERTO', FALSE),
+(7, 'ERRADO', TRUE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(18, 'Redes e Segurança', 'Qual é a função básica do protocolo ARP (Address Resolution Protocol)?', 'Mapear um endereço IP (Camada 3) em um endereço MAC físico (Camada 2) correspondente na LAN.', 'https://datatracker.ietf.org/doc/html/rfc826');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(18, 'Bloquear pacotes de vírus provenientes da internet.', FALSE),
-(18, 'Mapear o endereço IP lógico de um host para o seu endereço físico MAC na rede local.', TRUE),
-(18, 'Sincronizar o relógio dos servidores da rede.', FALSE),
-(18, 'Enviar e-mails de forma automatizada.', FALSE);
+-- Pergunta 8
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(8, 3, 'O Princípio da Substituição de Liskov (L do SOLID) indica que uma classe filha deve poder substituir sua classe pai sem quebrar o programa?',
+'A programação orientada a objetos utiliza os princípios SOLID para garantir um código sustentável.',
+'O Princípio de Liskov dita que instâncias de uma classe derivada devem ser capazes de substituir objetos da classe base sem alterar as propriedades corretas do programa.',
+'Clean Coder Blog (Robert C. Martin)',
+'https://blog.cleancoder.com/uncle-bob/2020/10/18/Solid-Relevance.html');
 
--- =============================================
--- GOVERNANÇA, GESTÃO E LEGISLAÇÃO (19 a 24)
--- =============================================
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(8, 'CERTO', TRUE),
+(8, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(19, 'Governança e Legislação', 'Qual o foco principal do framework COBIT (especialmente em sua versão 2019)?', 'Alinhar a Governança e a Gestão da Tecnologia da Informação aos objetivos estratégicos do negócio.', 'https://www.isaca.org/resources/cobit');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(19, 'Especificar a sintaxe de código em linguagens de programação.', FALSE),
-(19, 'Fornecer uma estrutura para Governança e Gestão de TI alinhada ao negócio.', TRUE),
-(19, 'Definir regras para montagem de cabeamento estruturado.', FALSE),
-(19, 'Substituir a legislação de proteção de dados pessoais.', FALSE);
+-- Pergunta 9
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(9, 3, 'Uma busca com complexidade O(log n) acessa a posição da memória instantaneamente sem fazer divisões?',
+'Estruturas de dados possuem diferentes eficiências assintóticas para busca de elementos.',
+'O acesso instantâneo via índice possui complexidade O(1). A complexidade O(log n) envolve divisões sucessivas do espaço de busca, como ocorre na busca binária.',
+'MIT OpenCourseWare Algorithms',
+'https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(20, 'Governança e Legislação', 'O que é o Sistema de Valor de Serviço (SVS) na ITIL v4?', 'Uma estrutura modular que demonstra como os componentes da organização trabalham juntos para co-criar valor.', 'https://www.axelos.com/certifications/itil-service-management');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(20, 'Um banco de dados exclusivo para armazenar senhas de usuários.', FALSE),
-(20, 'O modelo da ITIL v4 que descreve a integração de componentes e atividades para criação de valor por meio de serviços.', TRUE),
-(20, 'Um software proprietário para gerenciamento de chamados.', FALSE),
-(20, 'Um método de contabilidade para calcular o custo do hardware.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(9, 'CERTO', FALSE),
+(9, 'ERRADO', TRUE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(21, 'Governança e Legislação', 'Segundo a LGPD (Lei nº 13.709/2018), o que são Dados Pessoais Sensíveis?', 'Dados sobre origem racial, convicção religiosa, saúde, biometria, genética ou vida sexual.', 'https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(21, 'Apenas o número de telefone e o endereço IP do usuário.', FALSE),
-(21, 'Dados sobre origem racial, convicções religiosas, saúde, genética ou biometria.', TRUE),
-(21, 'Qualquer informação pública compartilhada em redes sociais.', FALSE),
-(21, 'Dados corporativos que não possuem relação com pessoas físicas.', FALSE);
+-- Pergunta 10
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(10, 3, 'O algoritmo Mark-and-Sweep de Garbage Collection identifica primeiro os objetos ativos para depois liberar os não marcados?',
+'Mecanismos de gerenciamento de memória em linguagens como Java e C# automatizam a liberação de espaço.',
+'O algoritmo Mark-and-Sweep funciona em duas etapas: na fase Mark ele navega pelos objetos acessíveis marcando-os; na fase Sweep ele varre a memória removendo os objetos não marcados.',
+'Oracle Java Documentation',
+'https://docs.oracle.com/en/java/javase/17/gctuning/introduction-garbage-collection-tuning.html');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(22, 'Governança e Legislação', 'Quais são os pilares fundamentais da Segurança da Informação segundo a norma ISO/IEC 27001?', 'Confidencialidade, Integridade e Disponibilidade (Tríade CID).', 'https://www.iso.org/isoiec-27001-information-security.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(22, 'Rapidez, Usabilidade e Custo.', FALSE),
-(22, 'Confidencialidade, Integridade e Disponibilidade.', TRUE),
-(22, 'Autenticidade, Criptografia e Backup.', FALSE),
-(22, 'Hardware, Software e Pessoas.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(10, 'CERTO', TRUE),
+(10, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(23, 'Governança e Legislação', 'Na LGPD, qual a diferença entre os papéis do Controlador e do Operador?', 'O Controlador toma as decisões sobre o tratamento; o Operador realiza o tratamento em nome do Controlador.', 'https://www.gov.br/anpd/pt-br');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(23, 'O Operador define as regras da lei e o Controlador apenas executa o backup.', FALSE),
-(23, 'O Controlador toma as decisões relativas ao tratamento dos dados; o Operador trata os dados segundo as orientações do Controlador.', TRUE),
-(23, 'Ambos os termos são sinônimos e possuem exatamente a mesma função jurídica.', FALSE),
-(23, 'O Operador é sempre o titular dos dados pessoais.', FALSE);
+-- Pergunta 11
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(11, 3, 'Na passagem de parâmetros por valor, alterar a variável dentro do método modifica a variável original no chamador?',
+'O comportamento de argumentos em funções varia entre passagem por valor e por referência.',
+'Na passagem por valor, uma cópia do dado é enviada. Alterações feitas na cópia dentro da função não afetam a variável original externa.',
+'Microsoft C# Programming Guide',
+'https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/passing-parameters');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(24, 'Governança e Legislação', 'Qual a mudança conceitual marcante introduzida no PMBOK 7ª Edição?', 'Adoção de Princípios de Entrega de Projetos e Domínios de Desempenho no lugar de processos engessados.', 'https://www.pmi.org/pmbok-guide-standards');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(24, 'Proibição total do uso de métodos ágeis em gerenciamento de projetos.', FALSE),
-(24, 'Transição de uma estrutura focada em Processos/Áreas de Conhecimento para Princípios e Domínios de Desempenho.', TRUE),
-(24, 'Tornar obrigatória a utilização do software Microsoft Project em todos os projetos.', FALSE),
-(24, 'Foco exclusivo na fase de encerramento do contrato.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(11, 'CERTO', FALSE),
+(11, 'ERRADO', TRUE);
 
--- =============================================
--- SISTEMAS OPERACIONAIS E DEVOPS (25 a 30)
--- =============================================
+-- Pergunta 12
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(12, 3, 'Um Memory Leak acontece quando uma aplicação retém referências a objetos que não são mais necessários?',
+'Problemas de consumo excessivo de RAM frequentemente ocorrem devido ao mau gerenciamento de referências.',
+'O vazamento de memória (Memory Leak) ocorre quando blocos de memória inacessíveis pela lógica do negócio continuam alocados porque ainda existem referências retidas para eles.',
+'MDN Web Docs Memory Management',
+'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(25, 'Sistemas Operacionais', 'O que é Deadlock e quais são as 4 condições necessárias para sua ocorrência?', 'Bloqueio mútuo de processos. As 4 condições de Coffman são: Exclusão Mútua, Posse e Espera, Não Preempção e Espera Circular.', 'https://www.pearson.com/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(25, 'Desligamento abrupto por falta de energia solar.', FALSE),
-(25, 'Bloqueio permanente de processos devido às condições de Exclusão Mútua, Posse e Espera, Não Preempção e Espera Circular.', TRUE),
-(25, 'Falha no disco rígido por superaquecimento.', FALSE),
-(25, 'Uma técnica de otimização de memória RAM.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(12, 'CERTO', TRUE),
+(12, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(26, 'Sistemas Operacionais', 'Qual a diferença entre Virtualização via Máquina Virtual (VM) e Conteinerização (ex: Docker)?', 'VMs virtualizam o hardware e executam um Guest OS completo; Containers compartilham o Kernel do SO hospedeiro.', 'https://docs.docker.com/get-started/overview/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(26, 'Containers são mais lentos e consomem mais memória que Máquinas Virtuais.', FALSE),
-(26, 'VMs virtualizam o hardware com um SO Convidado próprio; Containers compartilham o Kernel do SO hospedeiro sendo mais leves.', TRUE),
-(26, 'Não é possível rodar bancos de dados dentro de containers.', FALSE),
-(26, 'VMs só funcionam no Windows e Containers no Linux.', FALSE);
+-- Pergunta 13
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(13, 3, 'Injeção de Dependência é uma implementação do padrão de Inversão de Controle (IoC)?',
+'Padrões de projeto ajudam a descompilar acoplamentos rígidos entre classes.',
+'Injeção de Dependência é uma forma concreta de aplicar a Inversão de Controle, fornecendo as dependências externas a um componente em vez de deixá-lo instanciá-las internamente.',
+'Martin Fowler Design Patterns',
+'https://martinfowler.com/articles/injection.html');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(27, 'Sistemas Operacionais', 'Como funciona o Escalonamento de Processos Preemptivo em um Sistema Operacional?', 'O SO pode interromper um processo em execução para conceder a CPU a outro processo com prioridade/tempo.', 'https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(27, 'Um processo roda até finalizar voluntariamente sem que o SO possa interrompê-lo.', FALSE),
-(27, 'O SO pode interromper temporariamente a execução de um processo para dar vez a outro segundo seu algoritmo.', TRUE),
-(27, 'Os processos são executados estritamente por ordem de tamanho de arquivo.', FALSE),
-(27, 'Só é utilizado quando o computador não possui memória RAM.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(13, 'CERTO', TRUE),
+(13, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(28, 'Sistemas Operacionais', 'No Linux, o que significam as permissões `755` aplicadas via comando `chmod`?', 'Leitura, Escrita e Execução (7) para o Dono; Leitura e Execução (5) para o Grupo e Outros.', 'https://man7.org/linux/man-pages/man1/chmod.1.html');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(28, 'Apenas o administrador pode ler o arquivo.', FALSE),
-(28, 'Dono com permissão total (rwx = 7); Grupo e Outros apenas com leitura e execução (r-x = 5).', TRUE),
-(28, 'O arquivo torna-se oculto para todos os usuários.', FALSE),
-(28, 'Deleta o arquivo após 755 segundos.', FALSE);
+-- Pergunta 14
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(14, 4, 'A propriedade Durabilidade do ACID garante a permanência dos dados mesmo em caso de falha de energia imediatamente após o commit?',
+'Transações em Bancos de Dados Relacionais seguem regras estritas para garantir confiabilidade.',
+'A Durabilidade garante que, uma vez confirmada (committed) a transação, suas alterações persistirão no banco mesmo se houver falha de hardware, energia ou crash do sistema.',
+'PostgreSQL Official Documentation',
+'https://www.postgresql.org/docs/current/tutorial-transactions.html');
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(29, 'DevOps', 'No contexto do DevOps, o que significam as práticas de CI/CD?', 'CI é a Integração Contínua (compilação e testes automatizados); CD é a Entrega/Implantação Contínua na produção.', 'https://www.redhat.com/pt-br/topics/devops/what-is-ci-cd');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(29, 'Criptografia Interna e Descriptografia de Dados.', FALSE),
-(29, 'Integração Contínua (automção de builds/testes) e Entrega/Implantação Contínua no ambiente de destino.', TRUE),
-(29, 'Criação de Interfaces e Controle de Diagramas.', FALSE),
-(29, 'Consulta de Informações e Catalogação de Dados.', FALSE);
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(14, 'CERTO', TRUE),
+(14, 'ERRADO', FALSE);
 
-INSERT INTO perguntas (id, categoria, enunciado, justificativa, fonte_url) VALUES
-(30, 'DevOps', 'Qual é a principal responsabilidade da plataforma Kubernetes (k8s)?', 'Orquestrar e automatizar a implantação, o escalamento e o gerenciamento de aplicações em containers.', 'https://kubernetes.io/docs/concepts/overview/');
-INSERT INTO alternativas (pergunta_id, texto_alternativa, eh_correta) VALUES
-(30, 'Compilar código Java para plataformas mobile.', FALSE),
-(30, 'Orquestrar e automatizar a implantação, escalamento e operação de containers em cluster.', TRUE),
-(30, 'Substituir a necessidade de escrever queries SQL.', FALSE),
-(30, 'Gerenciar o hardware físico dos datacenters.', FALSE);
+-- Pergunta 15
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(15, 4, 'Índices Hash em bancos relacionais são mais indicados que B-Tree para consultas com operadores de intervalo (< e >)?',
+'A escolha do tipo de índice impacta diretamente o plano de execução e performance de queries SQL.',
+'Índices Hash funcionam apenas para buscas de igualdade exata (=). Para consultas de intervalo (<, >, BETWEEN), os índices B-Tree são os adequados por manterem os dados ordenados.',
+'MySQL Reference Manual',
+'https://dev.mysql.com/doc/refman/8.0/en/mysql-indexes.html');
 
--- Ajustar a sequência do PostgreSQL após o insert dos IDs
-SELECT setval('perguntas_id_seq', (SELECT MAX(id) FROM perguntas));
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(15, 'CERTO', FALSE),
+(15, 'ERRADO', TRUE);
+
+-- Pergunta 16
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(16, 4, 'O problema N+1 em ORMs acontece quando o sistema executa 1 query principal e N queries adicionais para trazer os relacionamentos de cada registro?',
+'Mapeadores Objeto-Relacional como Hibernate ou Entity Framework exigem cuidados com estratégias de carregamento.',
+'O problema N+1 é um gargalo comum em ORMs onde o carregamento preguiçoso (lazy loading) gera N consultas separadas ao banco para obter os relacionamentos dos N itens trazidos na consulta inicial.',
+'Hibernate ORM User Guide',
+'https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#fetching');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(16, 'CERTO', TRUE),
+(16, 'ERRADO', FALSE);
+
+-- Pergunta 17
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(17, 4, 'O conceito de Sharding consiste na divisão horizontal do banco de dados entre múltiplos servidores físicos independentes?',
+'Estratégias de escalabilidade de bancos de dados são cruciais para grandes volumes de informação.',
+'Sharding distribui registros de uma tabela entre instâncias/servidores distintos (horizontalmente), diferente do particionamento tradicional que ocorre no mesmo servidor.',
+'MongoDB Manual - Sharding',
+'https://www.mongodb.com/docs/manual/sharding/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(17, 'CERTO', TRUE),
+(17, 'ERRADO', FALSE);
+
+-- Pergunta 18
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(18, 4, 'Todos os bancos de dados NoSQL utilizam estritamente o modelo Chave-Valor?',
+'Sistemas NoSQL oferecem flexibilidade para armazenar dados não estruturados.',
+'O modelo NoSQL abrange quatro categorias principais: Documentos (ex: MongoDB), Chave-Valor (ex: Redis), Família de Colunas (ex: Cassandra) e Grafos (ex: Neo4j).',
+'AWS NoSQL Documentation',
+'https://aws.amazon.com/nosql/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(18, 'CERTO', FALSE),
+(18, 'ERRADO', TRUE);
+
+-- Pergunta 19
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(19, 4, 'Em uma arquitetura Primary-Secondary (Master-Replica), as escritas ocorrem no nó Primário e são replicadas para os Secundários?',
+'Padrões de replicação são adotados para alta disponibilidade e separação de leituras/escritas.',
+'O nó primário concentra as operações de modificação (INSERT/UPDATE/DELETE) e sincroniza os dados com as réplicas secundárias, que servem para distribuir as operações de leitura.',
+'Redis Documentation',
+'https://redis.io/docs/latest/operate/oss_and_stack/management/replication/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(19, 'CERTO', TRUE),
+(19, 'ERRADO', FALSE);
+
+-- Pergunta 20
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(20, 5, 'Containers Docker compartilham o mesmo kernel do sistema operacional hospedeiro?',
+'A tecnologia de containerização revolucionou o empacotamento de software ao ser mais leve que máquinas virtuais.',
+'Containers compartilham o kernel do sistema operacional do host e isolam apenas os processos de aplicação, diferente de VMs que sobem um SO completo com seu próprio kernel.',
+'Docker Documentation',
+'https://docs.docker.com/get-started/overview/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(20, 'CERTO', TRUE),
+(20, 'ERRADO', FALSE);
+
+-- Pergunta 21
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(21, 5, 'No Kubernetes, os Worker Nodes são os responsáveis únicos por tomar decisões de agendamento de Pods?',
+'Arquiteturas de orquestração dividem responsabilidades entre nós de controle e nós de trabalho.',
+'O agendamento (scheduling) de Pods é feito pelo componente kube-scheduler, que pertence estritamente ao Control Plane e não aos Worker Nodes.',
+'Kubernetes Documentation',
+'https://kubernetes.io/docs/concepts/overview/components/#control-plane-components');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(21, 'CERTO', FALSE),
+(21, 'ERRADO', TRUE);
+
+-- Pergunta 22
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(22, 5, 'Infraestrutura como Código (IaC) permite gerenciar e provisionar ambientes usando arquivos de configuração declarativos?',
+'A automação de infraestrutura moderna reduz erros manuais em ambientes de nuvem.',
+'Ferramentas como Terraform ou CloudFormation usam linguagens declarativas para versionar e aplicar a criação de recursos de infraestrutura via código.',
+'HashiCorp Terraform Documentation',
+'https://developer.hashicorp.com/terraform/intro');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(22, 'CERTO', TRUE),
+(22, 'ERRADO', FALSE);
+
+-- Pergunta 23
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(23, 5, 'A estratégia de deploy Blue/Green exige manter o sistema indisponível por várias horas para atualização?',
+'Técnicas modernas de deploy visam minimizar o tempo de inatividade (downtime).',
+'O deploy Blue/Green reduz o downtime a zero alternando o roteador de tráfego instantaneamente do ambiente atual (Blue) para o novo ambiente já atualizado (Green).',
+'AWS Well-Architected Framework',
+'https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/introduction.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(23, 'CERTO', FALSE),
+(23, 'ERRADO', TRUE);
+
+-- Pergunta 24
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(24, 5, 'No modelo Serverless (FaaS), o desenvolvedor não precisa alocar ou gerenciar servidores físicos e virtuais?',
+'A computação orientada a eventos abstrai a gestão direta do sistema operacional.',
+'No modelo Serverless, o provedor de nuvem gerencia o provisionamento, dimensionamento e manutenção dos servidores, cobrando estritamente pelo tempo de execução da função.',
+'Cloudflare Learning Center',
+'https://www.cloudflare.com/learning/serverless/what-is-serverless/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(24, 'CERTO', TRUE),
+(24, 'ERRADO', FALSE);
+
+-- Pergunta 25
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(25, 5, 'Integração Contínua (CI) é o processo manual de copiar os arquivos de código para o servidor de produção?',
+'Práticas de DevOps automatizam o ciclo de vida do desenvolvimento de software.',
+'Integração Contínua (CI) é a prática automatizada de integrar alterações de código em um repositório compartilhado executando builds e testes automáticos.',
+'GitLab Documentation',
+'https://docs.gitlab.com/ee/ci/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(25, 'CERTO', FALSE),
+(25, 'ERRADO', TRUE);
+
+-- Pergunta 26
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(26, 5, 'Microserviços dividem uma aplicação em pequenos serviços independentes que comunicam-se via rede?',
+'Arquiteturas de software mudaram do modelo monolítico para componentes desacoplados.',
+'Na arquitetura de microserviços, cada funcionalidade de negócio é tratada como um serviço autônomo com seu próprio ciclo de vida e deploy separado.',
+'Red Hat Architecture Topics',
+'https://www.redhat.com/en/topics/microservices/what-are-microservices');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(26, 'CERTO', TRUE),
+(26, 'ERRADO', FALSE);
+
+-- Pergunta 27
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(27, 6, 'O uso de Prepared Statements (Consultas Parametrizadas) é a principal defesa contra vulnerabilidades de SQL Injection?',
+'SQL Injection continua sendo uma das principais ameaças a sistemas web segundo a OWASP.',
+'Consultas parametrizadas garantem que o mecanismo do banco trate os dados inseridos pelo usuário estritamente como parâmetros, impedindo a interpretação de comandos SQL maliciosos.',
+'OWASP Top 10 Specification',
+'https://owasp.org/Top10/A03_2021-Injection/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(27, 'CERTO', TRUE),
+(27, 'ERRADO', FALSE);
+
+-- Pergunta 28
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(28, 6, 'A Criptografia Assimétrica utiliza uma única chave privada compartilhada para cifrar e decifrar as mensagens?',
+'Algoritmos de criptografia são a base da segurança da informação na internet.',
+'A criptografia que usa uma única chave é a Simétrica. A Criptografia Assimétrica utiliza um par de chaves matematicamente conectadas: uma Chave Pública (cifrar) e uma Chave Privada (decifrar).',
+'NIST Computer Security Resource Center',
+'https://csrc.nist.gov/glossary/term/asymmetric_cryptography');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(28, 'CERTO', FALSE),
+(28, 'ERRADO', TRUE);
+
+-- Pergunta 29
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(29, 6, 'Ataques de Cross-Site Scripting (XSS) injetam scripts maliciosos em páginas navegadas por outros usuários?',
+'Falhas de segurança em aplicações web frequentemente exploram o contexto do navegador.',
+'O XSS permite que atacantes injetem scripts do lado do cliente (como JavaScript) em páginas legítimas, podendo roubar cookies, tokens de sessão ou manipular o DOM do usuário.',
+'OWASP Cheat Sheet Series',
+'https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(29, 'CERTO', TRUE),
+(29, 'ERRADO', FALSE);
+
+-- Pergunta 30
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(30, 6, 'O protocolo OAuth 2.0 exige que o usuário passe sua senha mestre para a aplicação de terceiros acessar seus dados?',
+'Sistemas de autorização moderna evitam o compartilhamento direto de credenciais de usuário.',
+'O OAuth 2.0 concede acesso a recursos por meio de tokens de autorização específicos (Access Tokens), sem que o usuário precise expor suas credenciais ou senhas para a aplicação terceira.',
+'IETF RFC 6749 Specification',
+'https://datatracker.ietf.org/doc/html/rfc6749');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(30, 'CERTO', FALSE),
+(30, 'ERRADO', TRUE);
+
+-- Pergunta 31
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(31, 6, 'O Princípio do Menor Privilégio exige que usuários recebam apenas as permissões mínimas necessárias para suas tarefas?',
+'Políticas de segurança corporativa buscam restringir o raio de alcance de possíveis incidentes.',
+'Esse princípio de segurança dita que qualquer entidade (usuário ou processo) deve ter acesso apenas aos recursos estritamente necessários para desempenhar suas atribuições legítimas.',
+'CISA Security Guidelines',
+'https://www.cisa.gov/uscert/bsi/articles/knowledge/principles/least-privilege');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(31, 'CERTO', TRUE),
+(31, 'ERRADO', FALSE);
+
+-- Pergunta 32
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(32, 6, 'A política CORS impede que um próprio servidor aceite requisições vindas do seu próprio domínio original?',
+'Mecanismos de segurança em navegadores limitam interações entre origens distintas.',
+'O CORS (Cross-Origin Resource Sharing) bloqueia ou permite requisições feitas por domínios/origens *diferentes* do servidor. Requisições da mesma origem (same-origin) são sempre liberadas.',
+'W3C Recommendation',
+'https://www.w3.org/TR/cors/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(32, 'CERTO', FALSE),
+(32, 'ERRADO', TRUE);
+
+-- Pergunta 33
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(33, 6, 'Autenticação valida a identidade do usuário e Autorização determina suas permissões no sistema?',
+'Controle de acesso é dividido em duas etapas distintas na arquitetura de software.',
+'Autenticação responde à pergunta "Quem é você?" (validação de credencial), enquanto Autorização responde "O que você tem permissão para fazer?".',
+'Okta Developer Documentation',
+'https://developer.okta.com/docs/concepts/auth-overview/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(33, 'CERTO', TRUE),
+(33, 'ERRADO', FALSE);
+
+-- Pergunta 34
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(34, 7, 'Overfitting ocorre quando um modelo de IA performa perfeitamente nos dados de treino, mas falha em dados novos?',
+'Treinar modelos de Machine Learning exige um equilíbrio delicado entre generalização e capacidade de ajuste.',
+'Overfitting acontece quando o modelo decorou os ruídos e detalhes específicos dos dados de treinamento, perdendo a capacidade de generalizar para dados nunca vistos anteriormente.',
+'Scikit-Learn User Guide',
+'https://scikit-learn.org/stable/modules/learning_curve.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(34, 'CERTO', TRUE),
+(34, 'ERRADO', FALSE);
+
+-- Pergunta 35
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(35, 7, 'A arquitetura Transformer utiliza o mecanismo de Self-Attention para processar textos em paralelo?',
+'Modelos de Linguagem de Grande Porte (LLMs) dependem da arquitetura Transformer lançada em 2017.',
+'Diferente das redes recorrentes (RNNs) que processavam palavra por palavra em sequência, o Transformer processa todas as palavras simultaneamente com atenção global.',
+'arXiv Research Paper (Vaswani et al.)',
+'https://arxiv.org/abs/1706.03762');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(35, 'CERTO', TRUE),
+(35, 'ERRADO', FALSE);
+
+-- Pergunta 36
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(36, 7, 'O Aprendizado Não-Supervisionado exige dados anotados com rótulos e respostas conhecidas previamente?',
+'Algoritmos de aprendizado de máquina são classificados pelo modo como processam dados de entrada.',
+'O aprendizado que usa dados rotulados é o Supervisionado. O Não-Supervisionado trabalha com dados sem rótulos para identificar padrões e agrupamentos ocultos (ex: clustering).',
+'IBM Machine Learning Concepts',
+'https://www.ibm.com/topics/unsupervised-learning');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(36, 'CERTO', FALSE),
+(36, 'ERRADO', TRUE);
+
+-- Pergunta 37
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(37, 7, 'A técnica RAG (Retrieval-Augmented Generation) consulta bases de dados externas para enriquecer as respostas de um LLM?',
+'Reduzir alucinações e trazer fatos atualizados para modelos de linguagem é um desafio em IA.',
+'A RAG busca dados atualizados em uma base de conhecimento externa e os repassa como contexto no prompt do modelo de linguagem antes de gerar a resposta final.',
+'AWS Machine Learning Guides',
+'https://aws.amazon.com/what-is/retrieval-augmented-generation/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(37, 'CERTO', TRUE),
+(37, 'ERRADO', FALSE);
+
+-- Pergunta 38
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(38, 7, 'O algoritmo Gradient Descent é projetado para maximizar a taxa de erro de um modelo preditivo?',
+'O ajuste de pesos em redes neurais depende de algoritmos matemáticos de otimização.',
+'O Gradient Descent é um algoritmo otimizador que busca *minimizar* a função de perda (erro) ajustando iterativamente os parâmetros do modelo na direção oposta ao gradiente.',
+'DeepLearning.AI Notes',
+'https://www.deeplearning.ai/ai-notes/optimization/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(38, 'CERTO', FALSE),
+(38, 'ERRADO', TRUE);
+
+-- Pergunta 39
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(39, 8, 'O ciclo básico do TDD (Test-Driven Development) é conhecido pela sequência Red, Green, Refactor?',
+'Desenvolvimento orientado a testes propõe uma mudança na ordem tradicional de codificação.',
+'No TDD, o desenvolvedor escreve primeiro um teste que falha (Red), implementa o código estritamente necessário para passar (Green) e depois melhora a estrutura do código (Refactor).',
+'Agile Alliance Glossary',
+'https://www.agilealliance.org/glossary/tdd/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(39, 'CERTO', TRUE),
+(39, 'ERRADO', FALSE);
+
+-- Pergunta 40
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(40, 8, 'Testes Unitários dependem da conexão com redes e bancos de dados em produção para validar funções isoladas?',
+'A pirâmide de testes separa a abrangência e isolamento das baterias de testes automatizados.',
+'Testes unitários devem ser totalmente isolados de dependências externas (como bancos ou APIs). Para isso, utilizam-se Mocks e Stubs para simular essas dependências com velocidade.',
+'Google Testing Blog',
+'https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(40, 'CERTO', FALSE),
+(40, 'ERRADO', TRUE);
+
+-- Pergunta 41
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(41, 8, 'Objetos Mock são simulações programadas para verificar expectativas e chamadas em testes automatizados?',
+'A criação de dublês de testes ajuda na verificação de comportamento em código orientado a objetos.',
+'Mocks são tipos de objetos dublês que vêm pré-programados com expectativas sobre as chamadas de métodos que se espera que recebam durante o teste.',
+'Martin Fowler - Mocks Aren''t Stubs',
+'https://martinfowler.com/articles/mocksArentStubs.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(41, 'CERTO', TRUE),
+(41, 'ERRADO', FALSE);
+
+-- Pergunta 42
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(42, 9, 'A métrica LCP (Largest Contentful Paint) mede o tempo de renderização do maior elemento visível da página?',
+'O Google utiliza as métricas Core Web Vitals para avaliar a experiência do usuário e performance web.',
+'O LCP avalia a velocidade percebida de carregamento medindo quando o bloco de conteúdo principal (como uma imagem de destaque ou título grande) é renderizado.',
+'web.dev (Google)',
+'https://web.dev/articles/lcp');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(42, 'CERTO', TRUE),
+(42, 'ERRADO', FALSE);
+
+-- Pergunta 43
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(43, 9, 'CDNs reduzem o tempo de carregamento ao centralizar todas as requisições em um único servidor em um país específico?',
+'Redes de Distribuição de Conteúdo garantem velocidade global no acesso a páginas web.',
+'CDNs funcionam exatamente de forma contrária: distribuem réplicas de arquivos estáticos em servidores geograficamente próximos aos usuários finais (Edge Locations) para mitigar a latência.',
+'Akamai CDN Insights',
+'https://www.akamai.com/our-thinking/cdn-network-overview');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(43, 'CERTO', FALSE),
+(43, 'ERRADO', TRUE);
+
+-- Pergunta 44
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(44, 9, 'O HTTP/3 adota o protocolo QUIC baseado em UDP para evitar o bloqueio de início de fila (Head-of-Line Blocking)?',
+'A evolução das especificações da web visa resolver limitações do protocolo TCP.',
+'O HTTP/3 utiliza QUIC sobre UDP, garantindo que a perda de um pacote em um fluxo individual de dados não trave a transferência das demais conexões multiplexadas.',
+'IETF RFC 9114 Specification',
+'https://datatracker.ietf.org/doc/html/rfc9114');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(44, 'CERTO', TRUE),
+(44, 'ERRADO', FALSE);
+
+-- Pergunta 45
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(45, 9, 'No padrão Write-Through, a atualização do cache ocorre em segundo plano horas após o registro no banco?',
+'A sincronização de cache exige estratégias alinhadas aos requisitos de consistência da aplicação.',
+'Na estratégia Write-Through, a gravação na camada de cache ocorre simultaneamente e de forma síncrona com a escrita no banco de dados primário.',
+'Microsoft Cloud Patterns',
+'https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(45, 'CERTO', FALSE),
+(45, 'ERRADO', TRUE);
+
+-- Pergunta 46
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(46, 10, 'No Linux, o sinal SIGKILL (sinal 9) pode ser interceptado por uma aplicação para salvar dados antes de encerrar?',
+'O gerenciamento de processos via sinais POSIX possui níveis diferentes de privilégio.',
+'O sinal SIGKILL força a interrupção imediata pelo kernel e não pode ser capturado, bloqueado ou ignorado pela aplicação. Para finalização graciosa, utiliza-se o SIGTERM.',
+'Linux Man Pages - Signal(7)',
+'https://man7.org/linux/man-pages/man7/signal.7.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(46, 'CERTO', FALSE),
+(46, 'ERRADO', TRUE);
+
+-- Pergunta 47
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(47, 10, 'Condições de Corrida (Race Conditions) acontecem quando múltiplos processos acessam e alteram um recurso compartilhado sem controle concorrente?',
+'Sistemas multithreaded exigem mecanismos de trava (Mutex) para manter consistência de memória.',
+'Race conditions ocorrem quando o resultado final da execução depende da ordem temporal imprevisível em que duas ou mais threads lêem ou gravam na mesma variável.',
+'MIT CSAIL Course Notes',
+'https://web.mit.edu/6.005/www/fa15/classes/20-thread-safety/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(47, 'CERTO', TRUE),
+(47, 'ERRADO', FALSE);
+
+-- Pergunta 48
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(48, 10, 'A Memória Virtual permite ao sistema operacional alocar endereços lógicos maiores que a memória RAM física instalada?',
+'A gestão de memória em sistemas operacionais utiliza a paginação e o disco para estender recursos.',
+'A memória virtual abstrai a memória física, usando espaço em disco (swap/paging) para permitir que processos rodem mesmo ultrapassando a capacidade instalada de memória RAM física.',
+'Operating System Concepts (Silberschatz)',
+'https://www.os-book.com/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(48, 'CERTO', TRUE),
+(48, 'ERRADO', FALSE);
+
+-- Pergunta 49
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(49, 10, 'O conceito de SRE (Site Reliability Engineering) defende a execução manual de tarefas repetitivas de infraestrutura?',
+'Práticas criadas no Google unem engenharia de software com operações para garantir a disponibilidade de sistemas.',
+'O SRE atua no sentido oposto: incentiva a automação contínua de tarefas operacionais repetitivas (denominadas "toil") para que os engenheiros foquem em evolução do sistema.',
+'Google SRE Book',
+'https://sre.google/sre-book/introduction/');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(49, 'CERTO', FALSE),
+(49, 'ERRADO', TRUE);
+
+-- Pergunta 50
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES
+(50, 10, 'A Lei de Conway estabelece que a arquitetura de um software reflete as estruturas de comunicação da empresa que o criou?',
+'Estudos sobre sociologia das organizações influenciam o design de software moderno.',
+'Formulada por Melvin Conway, a lei afirma que o design dos sistemas desenvolvidos por uma organização tende a espelhar rigorosamente as suas próprias estruturas de comunicação interna.',
+'Mel Conway Official Paper',
+'http://www.melconway.com/research/committees.html');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
+(50, 'CERTO', TRUE),
+(50, 'ERRADO', FALSE);
+
+-- ============================================================
+-- 3. CONSULTA DE VERIFICAÇÃO (PARA TESTAR NO PGADMIN)
+-- ============================================================
+
+SELECT 
+    p.id,
+    c.nome AS categoria,
+    p.enunciado,
+    o.texto_opcao,
+    o.eh_correta,
+    p.explicacao,
+    p.fonte_nome,
+    p.fonte_url
+FROM perguntas p
+JOIN categorias c ON p.categoria_id = c.id
+JOIN opcoes o ON o.pergunta_id = p.id
+ORDER BY p.id, o.id;
