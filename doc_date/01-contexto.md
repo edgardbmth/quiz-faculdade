@@ -6,11 +6,10 @@ O **Duel Dev** é uma plataforma web interativa de treino e fixação de conheci
 
 | O banco faz | O banco não faz |
 | --- | --- |
-| Armazena perguntas de concursos categorizadas por tema | Não armazena senhas ou dados de autenticação de usuários |
-| Guarda até 5 alternativas por questão e indica a correta (`eh_correta`) | Não realiza geração automática de perguntas por Inteligência Artificial |
-| Fornece dados via endpoint REST (`/api/questions`) para o front-end | Não exige instalação de softwares ou dependências na máquina do jogador |
-| Registra explicações, justificativas e links de fontes bibliográficas | Não guarda histórico permanente de partidas em banco de dados global |
-| Registra a pontuação da rodada e exibe o Ranking da Sessão | |
+| Armazena de forma estruturada as questões, temas, alternativas, explicações e fontes bibliográficas[cite: 1]. | Não armazena senhas ou dados de autenticação de usuários[cite: 1]. |
+| Mantém a integridade referencial e restrições estruturais (`NOT NULL`, chaves primárias e estrangeiras)[cite: 3]. | Não realiza geração automática de perguntas por Inteligência Artificial[cite: 1]. |
+| Assegura o suporte flexível de 2 a 5 alternativas por questão sem alteração estrutural de tabela[cite: 2]. | Não executa a lógica de rotas da API REST nem regras visuais da interface. |
+| Armazena os registros e pontuações consolidadas do ranking da sessão de jogo. | Não guarda histórico permanente global de partidas em banco de dados global[cite: 1]. |
 
 | Usuário | O que faz |
 | --- | --- |
@@ -25,19 +24,28 @@ Para garantir a dinamicidade das partidas e evitar a simples memorização da po
 
 ## 3. Requisitos e regras de negócio
 
-| Código | Texto do requisito | Tipo |
-| --- | --- | --- |
-| **RD01** | Toda pergunta pertence a exatamente uma categoria temática (ex: Hardware, Redes). Não há duas categorias com o mesmo nome. | regra de negócio |
-| **RD02** | Toda pergunta possui título/enunciado, justificativa explicativa e categoria associada obrigatoriamente. | regra de negócio |
-| **RD03** | Cada pergunta possui um conjunto de alternativas associadas na tabela relacional. | regra de negócio |
-| **RD04** | Exatamente uma alternativa de cada pergunta possui o indicador lógico de resposta correta (`eh_correta = true`). | regra de negócio |
-| **RD05** | O modelo de dados aceita quantidade flexível de alternativas (de 2 a 5 opções) por questão sem necessidade de alterar a estrutura da tabela de perguntas. | regra de negócio |
-| **RD06** | Cada pergunta permite o armazenamento opcional de um link/URL de fonte bibliográfica oficial para consulta e aprofundamento. | regra de negócio |
-| **RA01** | Disponibilizar as perguntas cadastradas, com suas respectivas categorias e alternativas relacionais, via endpoint REST (`/api/questions`). | funcional |
-| **RA02** | Randomizar a ordem de exibição das alternativas de cada questão a cada nova partida para o jogador (algoritmo Fisher-Yates). | funcional |
-| **RA03** | Validar a alternativa selecionada pelo jogador comparando a escolha com o campo `eh_correta` da base de dados. | funcional |
-| **RA04** | Exibir o feedback pedagógico imediato (justificativa técnica e link da fonte) após o envio da resposta pelo jogador. | funcional |
-| **RA05** | Contabilizar os pontos obtidos durante a rodada e exibir a tabela de classificação (*Ranking da Sessão*) ao final do quiz. | funcional |
-| **RNF01** | O SGBD utilizado para o armazenamento dos dados é estritamente o PostgreSQL (hospedado na nuvem via Supabase). | não funcional |
-| **RNF02** | O serviço de API para fornecimento de dados é desenvolvido em Node.js/Express e hospedado na plataforma Render. | não funcional |
-| **RNF03** | Integridade Referencial: Garantia de chaves primárias e estrangeiras válidas (`NOT NULL`) com restrições operacionais entre as tabelas de perguntas e alternativas. | não funcional |
+### Requisitos Funcionais (RF)
+| Código | Descrição do Requisito Funcional | Tipo |
+| :--- | :--- | :--- |
+| **RF01** | O sistema deve fornecer um endpoint de API REST para listar as perguntas cadastradas e suas respectivas alternativas para o front-end[cite: 1]. | funcional |
+| **RF02** | O sistema deve permitir que o usuário informe seu nome antes de iniciar a rodada do quiz para identificação na sessão[cite: 2]. | funcional |
+| **RF03** | O sistema deve embaralhar aleatoriamente as alternativas de múltipla escolha a cada rodada para evitar memorização[cite: 2]. | funcional |
+| **RF04** | O sistema deve validar a resposta enviada pelo usuário, exibir feedback pedagógico imediato com a justificativa técnica e contabilizar os pontos[cite: 2]. | funcional |
+| **RF05** | O sistema deve calcular e exibir a tabela de classificação (Ranking da Sessão) ao término da rodada[cite: 2]. | funcional |
+
+### Regras de Negócio (RD)
+| Código | Descrição da Regra de Negócio | Tipo |
+| :--- | :--- | :--- |
+| **RD01** | Toda pergunta pertence a exatamente uma categoria temática (ex: Hardware, Redes). Não há duas categorias com o mesmo nome[cite: 2]. | regra de negócio |
+| **RD02** | Toda pergunta possui obrigatoriamente título/enunciado, justificativa explicativa e categoria associada[cite: 2]. | regra de negócio |
+| **RD03** | Cada pergunta possui um conjunto associado de 2 a 5 alternativas de múltipla escolha[cite: 2]. | regra de negócio |
+| **RD04** | Exatamente uma alternativa de cada pergunta deve possuir o indicador lógico de resposta correta (`eh_correta = true`)[cite: 2]. | regra de negócio |
+| **RD05** | O armazenamento do link ou URL de fonte bibliográfica oficial para consulta e aprofundamento em cada questão é opcional[cite: 2]. | regra de negócio |
+
+### Requisitos Não Funcionais (RNF)
+| Código | Descrição do Requisito Não Funcional | Tipo |
+| :--- | :--- | :--- |
+| **RNF01** | O SGBD utilizado para o armazenamento dos dados deve ser estritamente o PostgreSQL (hospedado no Supabase)[cite: 3]. | não funcional |
+| **RNF02** | O serviço de API para fornecimento de dados deve ser desenvolvido em Node.js/Express e hospedado na plataforma Render[cite: 3]. | não funcional |
+| **RNF03** | O SGBD deve garantir a integridade referencial por meio de chaves primárias e estrangeiras válidas (`NOT NULL`) entre as tabelas de perguntas e alternativas[cite: 3]. | não funcional |
+| **RNF04** | A interface web (front-end) deve ser responsiva e compatível com os principais navegadores modernos do mercado. | não funcional |
