@@ -2,7 +2,7 @@
 
 ## 1. Introdução e contexto
 
-O **Duel Dev** é uma plataforma web interativa de treino e fixação de conhecimentos, voltada para a preparação de candidatos em questões de Informática para Concursos Públicos. Através de uma abordagem de gamificação, o sistema transforma a resolução de questões de exames oficiais em uma experiência estimulante e dinâmica que fomenta a curiosidade, o aprendizado ativo e a retenção do conhecimento. O objetivo deste banco de dados (hospedado no PostgreSQL via Supabase) é armazenar e gerenciar de forma estruturada as questões, categorias temáticas (ex: Hardware, Redes, Lógica de Programação), alternativas de resposta, gabaritos corretos e justificativas explicativas com fontes bibliográficas, disponibilizando estes dados por meio de uma API REST em Node.js (hospedada no Render) para consumo pelo front-end da aplicação.
+O Dev Duel é uma plataforma web interativa de treino e fixação de conhecimentos, voltada para profissionais, estudantes e entusiastas da área de Tecnologia da Informação. Através de uma abordagem de gamificação, o sistema transforma o estudo de conceitos técnicos complexos (como arquitetura de sistemas, redes, algoritmos, banco de dados e DevOps) em uma experiência estimulante e dinâmica. O objetivo deste banco de dados é armazenar e gerenciar de forma estruturada as questões técnicas, categorias da tecnologia, alternativas de resposta (estilo Certo/Errado ou múltipla escolha), explicações pedagógicas e links de fontes bibliográficas oficiais, disponibilizando estes dados por meio de uma API REST para consumo pelo front-end da aplicação.
 
 | O banco faz | O banco não faz |
 | --- | --- |
