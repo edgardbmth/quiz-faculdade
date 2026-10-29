@@ -4,7 +4,7 @@
 | ----------- | ------------- |
 | Equipe      | Grupo 6 |
 | Integrantes | Higor da Silva - Enzo Moreira - Edgard Aparecido - Adriano Muniz - José Bettuz
-| Repositório | **Backend / DB:** https://github.com/lchaves06/duelquiz-backend<br>**Frontend:** https://github.com/edgardbmth/quiz-faculdade |
+| Repositório | https://github.com/edgardbmth/quiz-faculdade |
 | Data        | M1: 04/10/2026 |
 
 ---
