@@ -1,180 +1,129 @@
 -- ============================================================================
 -- EQUIPE: Dev Duel
--- SCRIPT DE CARGA E CONSULTAS (M4)
+-- SCRIPT DE CARGA (DML) E CONSULTAS - Compatível com o DDL de 5 Tabelas
+-- SGBD: PostgreSQL
 -- ============================================================================
 
 BEGIN;
 
--- 1. CARGA DML MÍNIMA
+-- ============================================================================
+-- 1. CARGA DE DADOS (DML)
+-- ============================================================================
 
--- Categorias
-INSERT INTO categoria (nome) VALUES 
-('Redes de Computadores'),
-('Banco de Dados');
+-- Inserir Categorias
+INSERT INTO categorias (id, nome) VALUES 
+(1, 'Redes de Computadores'),
+(2, 'Banco de Dados');
 
--- Publicadores (Bancas Examinadoras / Editoras)
-INSERT INTO publicador (nome) VALUES 
-('Banca CESPE/Cebraspe'),
-('Editora Pearson');
+-- Inserir Perguntas (Com fontes integradas diretamente)
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES 
+(1, 2, 'Em um banco de dados relacional, uma tabela pode ter múltiplas chaves primárias.', 'Conceito fundamental de modelagem relacional.', 'Uma tabela relacional pode ter apenas uma chave primária, embora ela possa ser composta por mais de uma coluna.', 'Guia de Referência SQL', 'https://www.postgresql.org/docs/manual/'),
 
--- Fontes (1 URL citada por pelo menos 2 perguntas)
-INSERT INTO fonte (titulo, url, id_publicador, codigo_idioma) VALUES 
-('Guia de Referência SQL', 'https://www.postgresql.org/docs/manual/', 1, 'pt-BR'),
-('Redes de Computadores - Tanenbaum', 'https://www.pearson.com/redes', 2, 'pt-BR');
+(2, 2, 'A cláusula WHERE no comando SQL SELECT é utilizada para filtrar linhas antes do agrupamento por GROUP BY.', 'Operações de agregação e filtragem em SQL.', 'Correto. O WHERE filtra os registros individuais antes da agregação feita pelo GROUP BY.', 'Guia de Referência SQL', 'https://www.postgresql.org/docs/manual/'),
 
--- Perguntas (6 no mínimo, com fact-001 a fact-006, cobrindo Certo e Errado)
-INSERT INTO pergunta (codigo_fact, titulo, enunciado, explicacao, id_categoria, id_fonte, id_alternativa_correta) VALUES 
-('fact-001', 'Chave Primária SQL', 'Em um banco de dados relacional, uma tabela pode ter múltiplas chaves primárias.', 'Uma tabela relacional pode ter apenas uma chave primária, embora ela possa ser composta por mais de uma coluna.', 2, 1, 2), -- Gabarito: Errado (id_alternativa 2)
+(3, 1, 'A camada de Transporte do modelo OSI é responsável pelo roteamento dos pacotes na rede.', 'Estudo das arquiteturas de redes de computadores e camadas OSI.', 'Errado. O roteamento de pacotes é responsabilidade da camada de Rede (Camada 3).', 'Redes de Computadores - Tanenbaum', 'https://www.pearson.com/redes'),
 
-('fact-002', 'Cláusula WHERE', 'A cláusula WHERE no comando SQL SELECT é utilizada para filtrar linhas antes do agrupamento por GROUP BY.', 'Correto. O WHERE filtra os registros antes da agregação feita pelo GROUP BY.', 2, 1, 1), -- Gabarito: Certo (id_alternativa 1)
+(4, 1, 'O protocolo TCP é orientado à conexão e garante a entrega ordenada dos pacotes.', 'Funcionamento dos protocolos de transporte.', 'Correto. O TCP provê controle de fluxo, retransmissão e garantia de ordem.', 'Redes de Computadores - Tanenbaum', 'https://www.pearson.com/redes');
 
-('fact-003', 'Modelo OSI', 'A camada de Transporte do modelo OSI é responsável pelo roteamento dos pacotes na rede.', 'Errado. O roteamento de pacotes é responsabilidade da camada de Rede (Camada 3).', 1, 2, 2), -- Gabarito: Errado (id_alternativa 2)
+-- Inserir Opções / Alternativas (Certo / Errado para cada pergunta)
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES 
+-- Pergunta 1 (Gabarito: Errado)
+(1, 'Certo', FALSE),
+(1, 'Errado', TRUE),
 
-('fact-004', 'Protocolo TCP', 'O protocolo TCP é orientado à conexão e garante a entrega ordenada dos pacotes.', 'Correto. O TCP provê controle de fluxo, retransmissão e garantia de ordem.', 1, 2, 1), -- Gabarito: Certo (id_alternativa 1)
+-- Pergunta 2 (Gabarito: Certo)
+(2, 'Certo', TRUE),
+(2, 'Errado', FALSE),
 
-('fact-005', 'Comando TRUNCATE', 'O comando TRUNCATE TABLE remove todas as linhas de uma tabela sem registrar individualmente a exclusão das linhas no log.', 'Correto. O TRUNCATE é uma operação DDL mais rápida que o DELETE sem WHERE.', 2, 1, 1), -- Gabarito: Certo (id_alternativa 1)
+-- Pergunta 3 (Gabarito: Errado)
+(3, 'Certo', FALSE),
+(3, 'Errado', TRUE),
 
-('fact-006', 'Mascara de Sub-rede', 'O endereço IPv4 possui 128 bits de comprimento.', 'Errado. O IPv4 possui 32 bits. O IPv6 é que possui 128 bits.', 1, 2, 2); -- Gabarito: Errado (id_alternativa 2)
+-- Pergunta 4 (Gabarito: Certo)
+(4, 'Certo', TRUE),
+(4, 'Errado', FALSE);
 
 COMMIT;
 
+
 -- ============================================================================
--- CONSULTAS (RA01 a RA07)
+-- 2. CONSULTAS DE TESTE (RA01 a RA07 adaptadas)
 -- ============================================================================
 
 -- RA01: Listar as categorias em ordem alfabética, com a quantidade de perguntas.
-SELECT c.nome AS categoria, COUNT(p.id_pergunta) AS quantidade_perguntas
-FROM categoria c
-LEFT JOIN pergunta p ON c.id_categoria = p.id_categoria
-GROUP BY c.nome
+SELECT c.nome AS categoria, COUNT(p.id) AS quantidade_perguntas
+FROM categorias c
+LEFT JOIN perguntas p ON c.id = p.categoria_id
+GROUP BY c.id, c.nome
 ORDER BY c.nome ASC;
-/* RESULTADO ESPERADO:
-     categoria         | quantidade_perguntas 
------------------------+----------------------
- Banco de Dados        |                    3
- Redes de Computadores |                    3
-*/
 
 
 -- RA02a: Sortear uma pergunta de qualquer categoria.
-SELECT id_pergunta, codigo_fact, titulo, enunciado 
-FROM pergunta 
+SELECT id, enunciado, fonte_nome, fonte_url 
+FROM perguntas 
 ORDER BY RANDOM() 
 LIMIT 1;
-/* RESULTADO ESPERADO (Exemplo sorteado id_pergunta = 1):
- id_pergunta | codigo_fact |     titulo       |                              enunciado                               
--------------+-------------+------------------+----------------------------------------------------------------------
-           1 | fact-001    | Chave Primaria   | Em um banco de dados relacional, uma tabela pode ter multiplas...
-*/
 
 
 -- RA02b: Sortear uma pergunta de uma categoria escolhida por parâmetro (ex: 'Banco de Dados').
-SELECT p.id_pergunta, p.codigo_fact, p.titulo, p.enunciado 
-FROM pergunta p
-JOIN categoria c ON p.id_categoria = c.id_categoria
+SELECT p.id, p.enunciado, p.explicacao
+FROM perguntas p
+JOIN categorias c ON p.categoria_id = c.id
 WHERE c.nome = 'Banco de Dados'
 ORDER BY RANDOM() 
 LIMIT 1;
-/* RESULTADO ESPERADO (Exemplo sorteado id_pergunta = 2):
- id_pergunta | codigo_fact |     titulo      |                             enunciado                              
--------------+-------------+-----------------+--------------------------------------------------------------------
-           2 | fact-002    | Cláusula WHERE  | A cláusula WHERE no comando SQL SELECT é utilizada para filtrar...
-*/
 
 
--- RA03: Exibir título, enunciado e as alternativas.
-SELECT p.titulo, p.enunciado, a.rotulo AS alternativa
-FROM pergunta p
-CROSS JOIN alternativa a
-WHERE p.codigo_fact = 'fact-001';
-/* RESULTADO ESPERADO:
-     titulo         |                              enunciado                               | alternativa 
---------------------+----------------------------------------------------------------------+-------------
- Chave Primária SQL | Em um banco de dados relacional, uma tabela pode ter múltiplas...    | Certo
- Chave Primária SQL | Em um banco de dados relacional, uma tabela pode ter múltiplas...    | Errado
-*/
+-- RA03: Exibir enunciado da pergunta e as suas opções/alternativas.
+SELECT p.enunciado, o.texto_opcao, o.eh_correta
+FROM perguntas p
+JOIN opcoes o ON p.id = o.pergunta_id
+WHERE p.id = 1;
 
 
--- RA04: Dizer se a alternativa escolhida é a correta.
--- Teste A: Pergunta fact-001 (Correta: Errado - id 2) -> Usuário escolheu alternativa 2 ('Errado')
+-- RA04: Verificar se a opção escolhida pelo utilizador é a correta.
+-- (Exemplo: Verificar se a opção com id 2 na pergunta 1 está correta)
 SELECT 
-    p.codigo_fact,
-    a_escolhida.rotulo AS alternativa_escolhida,
+    p.id AS pergunta_id,
+    o.texto_opcao AS opcao_escolhida,
     CASE 
-        WHEN p.id_alternativa_correta = 2 THEN 'ACERTOU'
+        WHEN o.eh_correta = TRUE THEN 'ACERTOU'
         ELSE 'ERROU'
     END AS resultado
-FROM pergunta p
-JOIN alternativa a_escolhida ON a_escolhida.id_alternativa = 2
-WHERE p.codigo_fact = 'fact-001';
-/* RESULTADO ESPERADO:
- codigo_fact | alternativa_escolhida | resultado 
--------------+-----------------------+-----------
- fact-001    | Errado                | ACERTOU
-*/
+FROM perguntas p
+JOIN opcoes o ON p.id = o.pergunta_id
+WHERE p.id = 1 AND o.id = 2;
 
--- Teste B: Pergunta fact-001 -> Usuário escolheu alternativa 1 ('Certo')
+
+-- RA05: Exibir a explicação detalhada e a fonte oficial de uma pergunta.
 SELECT 
-    p.codigo_fact,
-    a_escolhida.rotulo AS alternativa_escolhida,
-    CASE 
-        WHEN p.id_alternativa_correta = 1 THEN 'ACERTOU'
-        ELSE 'ERROU'
-    END AS resultado
-FROM pergunta p
-JOIN alternativa a_escolhida ON a_escolhida.id_alternativa = 1
-WHERE p.codigo_fact = 'fact-001';
-/* RESULTADO ESPERADO:
- codigo_fact | alternativa_escolhida | resultado 
--------------+-----------------------+-----------
- fact-001    | Certo                 | ERROU
-*/
+    id,
+    enunciado,
+    explicacao,
+    fonte_nome,
+    fonte_url
+FROM perguntas
+WHERE id = 1;
 
 
--- RA05: Exibir a explicação e a fonte completa: título, publicador, URL e idioma.
-SELECT 
-    p.codigo_fact,
-    p.explicacao,
-    f.titulo AS fonte_titulo,
-    pub.nome AS publicador,
-    f.url,
-    i.descricao AS idioma
-FROM pergunta p
-JOIN fonte f ON p.id_fonte = f.id_fonte
-JOIN publicador pub ON f.id_publicador = pub.id_publicador
-JOIN idioma i ON f.codigo_idioma = i.codigo_idioma
-WHERE p.codigo_fact = 'fact-001';
-/* RESULTADO ESPERADO:
- codigo_fact |                              explicacao                               |      fonte_titulo      |     publicador     |                 url                  |      idioma       
--------------+-----------------------------------------------------------------------+------------------------+--------------------+--------------------------------------+-------------------
- fact-001    | Uma tabela relacional pode ter apenas uma chave primária, embora...   | Guia de Referência SQL | Banca CESPE/Cebraspe | https://www.postgresql.org/docs/manual/ | Português (Brasil)
-*/
-
-
--- RA06: Listar os publicadores mais citados, com o número de perguntas.
-SELECT pub.nome AS publicador, COUNT(p.id_pergunta) AS quantidade_perguntas
-FROM publicador pub
-JOIN fonte f ON pub.id_publicador = f.id_publicador
-JOIN pergunta p ON f.id_fonte = p.id_fonte
-GROUP BY pub.nome
+-- RA06: Listar categorias ordenadas pela quantidade de perguntas (do maior para o menor).
+SELECT c.nome AS categoria, COUNT(p.id) AS quantidade_perguntas
+FROM categorias c
+JOIN perguntas p ON c.id = p.categoria_id
+GROUP BY c.id, c.nome
 ORDER BY quantidade_perguntas DESC;
-/* RESULTADO ESPERADO:
-     publicador     | quantidade_perguntas 
---------------------+----------------------
- Banca CESPE/Cebraspe |                    3
- Editora Pearson     |                    3
-*/
 
 
--- RA07: Listar as fontes citadas por mais de uma pergunta.
-SELECT f.titulo, f.url, COUNT(p.id_pergunta) AS quantidade_perguntas
-FROM fonte f
-JOIN pergunta p ON f.id_fonte = p.id_fonte
-GROUP BY f.id_fonte, f.titulo, f.url
-HAVING COUNT(p.id_pergunta) > 1;
-/* RESULTADO ESPERADO:
-              titulo               |                 url                  | quantidade_perguntas 
------------------------------------+--------------------------------------+----------------------
- Guia de Referência SQL            | https://www.postgresql.org/docs/manual/ |                    3
- Redes de Computadores - Tanenbaum | https://www.pearson.com/redes        |                    3
-*/
+-- RA07: Simular o registo de uma pontuação e consultar o ranking.
+-- Inserir utilizador e pontuação de teste:
+INSERT INTO usuarios (id, nome) VALUES (1, 'Higor (Jogador)');
+INSERT INTO pontuacoes (usuario_id, pontos) VALUES (1, 350);
+
+-- Consultar o Ranking Geral:
+SELECT 
+    u.nome AS jogador,
+    p.pontos,
+    p.data_sessao
+FROM pontuacoes p
+JOIN usuarios u ON p.usuario_id = u.id
+ORDER BY p.pontos DESC;
