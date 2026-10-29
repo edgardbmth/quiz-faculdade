@@ -1,61 +1,48 @@
--- ============================================================================
--- EQUIPE: Dev Duel
--- SGBD: PostgreSQL
--- JUSTIFICATIVA: Escolhido por sua robustez, suporte completo a restrições
---                de integridade referencial, e aderência ao padrão ANSI SQL.
--- CONTRATO COM WEB: Nomes e tabelas em minúsculo, no singular, sem acentuação.
--- ============================================================================
+-- ============================================================
+-- SCRIPT DE CRIAÇÃO - TECHQUIZ / TECH TRIVIA (DEV DUEL)
+-- Banco de Dados: PostgreSQL
+-- ============================================================
 
 BEGIN;
 
--- Criando tabelas
-CREATE TABLE categoria (
-    id_categoria SERIAL PRIMARY KEY,
+-- Tabela de Categorias (Temas da Tecnologia)
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE publicador (
-    id_publicador SERIAL PRIMARY KEY,
-    nome VARCHAR(150) NOT NULL UNIQUE
-);
-
-CREATE TABLE idioma (
-    codigo_idioma VARCHAR(10) PRIMARY KEY,
-    descricao VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE fonte (
-    id_fonte SERIAL PRIMARY KEY,
-    titulo VARCHAR(200) NOT NULL,
-    url VARCHAR(500) NOT NULL UNIQUE,
-    id_publicador INTEGER NOT NULL REFERENCES publicador(id_publicador),
-    codigo_idioma VARCHAR(10) NOT NULL REFERENCES idioma(codigo_idioma)
-);
-
-CREATE TABLE alternativa (
-    id_alternativa SERIAL PRIMARY KEY,
-    rotulo VARCHAR(50) NOT NULL,
-    valor_logico BOOLEAN NOT NULL
-);
-
-CREATE TABLE pergunta (
-    id_pergunta SERIAL PRIMARY KEY,
-    codigo_fact VARCHAR(20) NOT NULL UNIQUE,
-    titulo VARCHAR(150) NOT NULL,
+-- Tabela de Perguntas
+CREATE TABLE perguntas (
+    id SERIAL PRIMARY KEY,
+    categoria_id INT NOT NULL REFERENCES categorias(id) ON DELETE CASCADE,
     enunciado TEXT NOT NULL,
+    contexto TEXT,
     explicacao TEXT NOT NULL,
-    id_categoria INTEGER NOT NULL REFERENCES categoria(id_categoria),
-    id_fonte INTEGER NOT NULL REFERENCES fonte(id_fonte),
-    id_alternativa_correta INTEGER NOT NULL REFERENCES alternativa(id_alternativa)
+    fonte_nome VARCHAR(150) NOT NULL,
+    fonte_url TEXT NOT NULL
 );
 
--- Carga do Domínio Fixo (Idiomas e Alternativas)
-INSERT INTO idioma (codigo_idioma, descricao) VALUES
-('pt-BR', 'Português (Brasil)'),
-('en-US', 'Inglês (Estados Unidos)');
+-- Tabela de Opções/Alternativas (Com indicação de resposta correta)
+CREATE TABLE opcoes (
+    id SERIAL PRIMARY KEY,
+    pergunta_id INT NOT NULL REFERENCES perguntas(id) ON DELETE CASCADE,
+    texto_opcao VARCHAR(50) NOT NULL,
+    eh_correta BOOLEAN NOT NULL DEFAULT FALSE
+);
 
-INSERT INTO alternativa (id_alternativa, rotulo, valor_logico) VALUES
-(1, 'Certo', TRUE),
-(2, 'Errado', FALSE);
+-- Tabela de Usuários (Para apoio ao fluxo do jogador)
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Pontuações (Para apoio ao ranking da sessão)
+CREATE TABLE pontuacoes (
+    id SERIAL PRIMARY KEY,
+    usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    pontos INT NOT NULL,
+    data_sessao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 COMMIT;
