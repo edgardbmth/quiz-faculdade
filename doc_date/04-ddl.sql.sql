@@ -1,6 +1,6 @@
 -- ============================================================
--- SCRIPT DE CRIAÇÃO - TECHQUIZ / TECH TRIVIA (DEV DUEL)
--- Banco de Dados: PostgreSQL
+-- SCRIPT DE CRIAÇÃO (DDL) - DEV DUEL (TECH TRIVIA)
+-- SGBD: PostgreSQL
 -- ============================================================
 
 BEGIN;
