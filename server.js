@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const path = require('path'); // Adicionado para indicar caminhos de pastas no servidor
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 
-// 1. ALTERAÇÃO PRINCIPAL: Ler a porta dinâmica informada pelo Render (process.env.PORT)
+// Porta dinâmica informada pelo Render ou 3000 localmente
 const porta = process.env.PORT || 3000;
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -14,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.use(express.json());
 
-// 2. ALTERAÇÃO: Usar caminho absoluto para a pasta 'public' (evita falhas em servidores Linux)
+// Servir os ficheiros estáticos (HTML, CSS, JS) a partir da pasta 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/perguntas', async (req, res) => {
