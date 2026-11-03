@@ -405,50 +405,49 @@ body {
 ================================================== */
 
 .header {
-    position: relative;
-    z-index: 10;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 22px 32px;
+    height: 53px;
+    padding: 0 max(24px, calc((100% - 1240px) / 2));
+    border-bottom: 1px solid rgba(113, 60, 255, 0.18);
+    background: rgba(3, 5, 13, 0.78);
+    backdrop-filter: blur(12px);
 }
 
 .logo {
-    font-family: Consolas, "Courier New", monospace;
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: -0.5px;
     color: #fff;
 }
 
 .logo span {
-    color: #00bfff;
-    text-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+    background: linear-gradient(90deg, #7c5cff, #00bfff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 .header nav {
     display: flex;
-    gap: 28px;
+    gap: 30px;
 }
 
 .header nav a {
-    color: #b8c0e0;
+    color: #aeb6d3;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding-bottom: 4px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.25s ease;
+    font-size: 0.8rem;
+    transition: color 0.2s ease;
 }
 
 .header nav a:hover {
     color: #fff;
-    border-bottom-color: #00bfff;
 }
 
 
@@ -459,10 +458,9 @@ body {
 main {
     position: relative;
     z-index: 10;
-    width: 100%;
-    max-width: 1200px;
+    width: min(1240px, calc(100% - 48px));
     margin: 0 auto;
-    padding: 0 32px 60px;
+    padding-bottom: 70px;
 }
 
 
@@ -471,47 +469,43 @@ main {
 ================================================== */
 
 .hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 70px 0 50px;
+    padding: 96px 0 80px;
 }
 
 .hero-content {
-    max-width: 760px;
+    max-width: 640px;
 }
 
 .badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 18px;
-    margin-bottom: 26px;
+    padding: 9px 18px;
+    margin-bottom: 24px;
     border-radius: 999px;
-    border: 1px solid rgba(113, 60, 255, 0.5);
-    background: rgba(113, 60, 255, 0.12);
-    color: #c4b0ff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
+    border: 1px solid rgba(124, 92, 255, 0.65);
+    background: rgba(113, 60, 255, 0.15);
+    color: #cfc3ff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 .lightning {
-    color: #ffc83d;
+    color: #ff9a2e;
 }
 
 .hero h1 {
-    font-size: clamp(3rem, 9vw, 6rem);
+    font-size: clamp(3.5rem, 8vw, 6rem);
     font-weight: 900;
-    line-height: 1;
-    letter-spacing: 4px;
-    margin-bottom: 24px;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 26px;
     color: #fff;
 }
 
 .hero h1 span {
-    background: linear-gradient(135deg, #00bfff, #8a5cff);
+    background: linear-gradient(90deg, #6d5dfc, #00bfff);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -519,32 +513,32 @@ main {
 }
 
 .hero p {
-    font-size: 1.15rem;
-    line-height: 1.6;
-    color: #aab3d1;
-    margin-bottom: 34px;
+    max-width: 540px;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #cdd2ea;
+    margin-bottom: 32px;
 }
 
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
+    gap: 14px;
 }
 
 .hero-info {
-    margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
-    gap: 10px;
-    color: #8790b3;
-    font-size: 0.9rem;
+    gap: 8px;
+    margin-top: 28px;
+    color: #8b93b5;
+    font-size: 0.72rem;
 }
 
 .hero-info span {
-    color: #00bfff;
+    color: #7c5cff;
+    margin: 0 4px;
 }
 
 
@@ -558,40 +552,55 @@ button {
 }
 
 .btn-primary,
-.btn-secondary,
-.botao-modal {
+.btn-secondary {
     display: inline-block;
-    padding: 14px 30px;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 1px;
+    padding: 15px 22px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
     color: #fff;
     transition: all 0.25s ease;
 }
 
-.btn-primary,
-.botao-modal {
+.btn-primary {
     border: none;
-    background: linear-gradient(135deg, #713cff, #00bfff);
+    background: linear-gradient(90deg, #7c3aed, #3b82f6);
     box-shadow: 0 6px 22px rgba(113, 60, 255, 0.4);
 }
 
-.btn-primary:hover,
-.botao-modal:hover {
+.btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 191, 255, 0.45);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(8, 11, 26, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
     border-color: #00bfff;
     transform: translateY(-3px);
+}
+
+.botao-modal {
+    display: inline-block;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #7c3aed, #3b82f6);
+    box-shadow: 0 6px 22px rgba(113, 60, 255, 0.4);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.25s ease;
+}
+
+.botao-modal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
 }
 
 
@@ -601,59 +610,60 @@ button {
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    margin-top: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    max-width: 920px;
+    margin: 30px auto 0;
 }
 
 .card {
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    padding: 34px 26px;
-    border-radius: 16px;
+    display: block;
+    text-align: left;
+    padding: 24px;
+    border-radius: 14px;
     border: 1px solid rgba(113, 60, 255, 0.3);
-    background: rgba(13, 17, 38, 0.75);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(160deg, rgba(22, 24, 54, 0.85), rgba(8, 10, 26, 0.9));
     color: #fff;
     transition: all 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-5px);
     border-color: #00bfff;
-    box-shadow: 0 12px 34px rgba(0, 191, 255, 0.25);
+    box-shadow: 0 12px 34px rgba(0, 191, 255, 0.22);
 }
 
 .card-icon {
-    font-size: 2.2rem;
-    margin-bottom: 14px;
-    font-family: Consolas, monospace;
-    color: #00bfff;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(124, 92, 255, 0.55);
+    background: rgba(113, 60, 255, 0.15);
+    color: #8a6cff;
+    font-size: 1.1rem;
 }
 
 .card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
 }
 
 .card p {
-    color: #9aa3c4;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    color: #8d95b8;
+    font-size: 0.78rem;
+    line-height: 1.55;
 }
 
 .card-line {
+    width: 40px;
     height: 3px;
-    width: 40%;
-    margin: 22px auto 0;
+    margin-top: 20px;
     border-radius: 3px;
-    background: linear-gradient(90deg, #713cff, #00bfff);
-    transition: width 0.3s ease;
-}
-
-.card:hover .card-line {
-    width: 80%;
+    background: linear-gradient(90deg, #7c5cff, #00bfff);
 }
 
 
@@ -862,18 +872,28 @@ button {
    RESPONSIVO
 ================================================== */
 
-@media (max-width: 600px) {
-    .header {
-        justify-content: center;
-        padding: 16px;
-    }
-
-    main {
-        padding: 0 16px 40px;
+@media (max-width: 800px) {
+    .cards {
+        grid-template-columns: 1fr;
+        max-width: 420px;
     }
 
     .hero {
-        padding: 40px 0 30px;
+        padding: 56px 0 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header nav {
+        gap: 16px;
+    }
+
+    .logo {
+        font-size: 1.1rem;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
     }
 
     .modal-caixa {
