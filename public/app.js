@@ -49,7 +49,7 @@ function pedirNome() {
     abrirModal();
     conteudoModal.innerHTML = `
         <h2>👋 Quem está a jogar?</h2>
-        <p>Digite o seu nome ou apelido para registrarmos a sua pontuação no ranking:</p>
+        <p>Digite o seu nome ou apelido para registarmos a sua pontuação no ranking:</p>
         <input type="text" id="inputNomeJogador" placeholder="O seu nome..." autocomplete="off" style="width: 100%; padding: 12px; margin: 15px 0; border-radius: 5px; border: none; font-size: 16px; color: #333; box-sizing: border-box; font-family: inherit;">
         <button class="botao-modal" id="btnConfirmarNome">COMEÇAR DESAFIO</button>
     `;
@@ -72,7 +72,7 @@ function comoFunciona() {
     conteudoModal.innerHTML = `
         <h2>ⓘ Como funciona?</h2>
         <p>O Dev Duel é um quiz de programação criado para testar os seus conhecimentos em tecnologia.</p>
-        <p>Cada resposta correta aumenta a sua pontuação e coloca você no ranking global.</p>
+        <p>Cada resposta correta aumenta a sua pontuação e coloca-o no ranking global.</p>
         <button class="botao-modal" id="btnComecarComoFunciona">COMEÇAR AGORA</button>
     `;
     document.getElementById("btnComecarComoFunciona").addEventListener("click", pedirNome);
@@ -82,7 +82,7 @@ function abrirConhecimento() {
     abrirModal();
     conteudoModal.innerHTML = `
         <h2>&lt;/&gt; Conhecimento</h2>
-        <p>Nesta área você testará seus conhecimentos sobre tecnologia.</p>
+        <p>Nesta área testará os seus conhecimentos sobre tecnologia.</p>
         <button class="botao-modal" id="btnIniciarConhecimento">INICIAR DESAFIO</button>
     `;
     document.getElementById("btnIniciarConhecimento").addEventListener("click", pedirNome);
@@ -97,8 +97,9 @@ async function iniciarQuiz() {
         const dadosDoBanco = await resposta.json();
 
         let todasAsPerguntas = dadosDoBanco.map(item => {
-            const indiceCorreta = item.alternativas.findIndex(alt => alt.eh_correta === true);
-            const textosAlternativas = item.alternativas.map(alt => alt.texto_alternativa);
+            // CORREÇÃO: 'item.alternativas' alterado para 'item.opcoes' e 'texto_alternativa' para 'texto_opcao'
+            const indiceCorreta = item.opcoes.findIndex(alt => alt.eh_correta === true);
+            const textosAlternativas = item.opcoes.map(alt => alt.texto_opcao);
             return {
                 pergunta: item.enunciado,
                 alternativas: textosAlternativas,
@@ -142,7 +143,6 @@ function mostrarPergunta() {
         `;
     });
 
-    // Torna a fonte clicável (abre link direto ou pesquisa no Google)
     const linkFonte = pergunta.fonte.startsWith('http') 
         ? pergunta.fonte 
         : `https://www.google.com/search?q=${encodeURIComponent(pergunta.fonte)}`;
@@ -263,13 +263,13 @@ async function abrirRanking() {
 
                 resultado += `
                     <div class="ranking-item" ${destaque}>
-                        <span>${medalha} ${jogador.nome_jogador || 'Anônimo'}</span>
+                        <span>${medalha} ${jogador.nome_jogador || 'Anónimo'}</span>
                         <strong>${jogador.pontos} pts</strong>
                     </div>
                 `;
             });
         } else {
-            resultado += `<div class="ranking-item"><span>Ainda não há pontuações registradas.</span></div>`;
+            resultado += `<div class="ranking-item"><span>Ainda não há pontuações registadas.</span></div>`;
         }
 
         resultado += `<button class="botao-modal" id="btnFecharRanking" style="margin-top: 20px;">FECHAR</button>`;

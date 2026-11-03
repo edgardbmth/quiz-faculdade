@@ -18,7 +18,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/perguntas', async (req, res) => {
-  const { data, error } = await supabase.from('perguntas').select('*, alternativas(*)');
+  // CORREÇÃO: 'alternativas' alterado para 'opcoes' para corresponder à base de dados
+  const { data, error } = await supabase.from('perguntas').select('*, opcoes(*)');
 
   if (error) {
     return res.status(500).json({ erro: error.message });
@@ -55,6 +56,6 @@ app.get('/api/ranking', async (req, res) => {
 });
 
 app.listen(porta, () => {
-  console.log(`Servidor rodando na porta ${porta}`);
-  console.log('Banco de dados configurado!');
+  console.log(`Servidor a rodar na porta ${porta}`);
+  console.log('Base de dados configurada!');
 });
