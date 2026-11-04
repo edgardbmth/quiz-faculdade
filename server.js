@@ -22,7 +22,6 @@ app.get('/api/perguntas', async (req, res) => {
 app.post('/api/pontuacao', async (req, res) => {
   const { nome_jogador, pontos } = req.body; 
 
-  // Insere o nome e os pontos diretamente na tabela pontuacoes
   const { data, error } = await supabase
     .from('pontuacoes')
     .insert([{ nome_jogador: nome_jogador, pontos: pontos }]);
