@@ -21,27 +21,33 @@ const modalFundo = document.getElementById("modalFundo");
 const conteudoModal = document.getElementById("conteudoModal");
 const btnFechar = document.getElementById("btnFechar");
 
-// Eventos dos botões principais
-document.getElementById("btnComecar").addEventListener("click", pedirNome);
-document.getElementById("btnComoFunciona").addEventListener("click", comoFunciona);
+// Eventos executados assim que a página carrega
+document.addEventListener("DOMContentLoaded", function() {
+    const btnComecar = document.getElementById("btnComecar");
+    const btnComoFunciona = document.getElementById("btnComoFunciona");
+    const btnRanking = document.getElementById("btnRanking");
+    const btnRankingCard = document.getElementById("btnRankingCard");
 
-// Evento do menu de topo para o Ranking
-document.getElementById("btnRanking").addEventListener("click", function(event) {
-    event.preventDefault();
-    abrirRanking();
+    if (btnComecar) btnComecar.addEventListener("click", pedirNome);
+    if (btnComoFunciona) btnComoFunciona.addEventListener("click", comoFunciona);
+
+    if (btnRanking) {
+        btnRanking.addEventListener("click", function(event) {
+            event.preventDefault();
+            abrirRanking();
+        });
+    }
+
+    if (btnRankingCard) {
+        btnRankingCard.addEventListener("click", function(event) {
+            event.preventDefault();
+            abrirRanking();
+        });
+    }
 });
 
-// Evento do cartão centralizado para o Ranking (com verificação de segurança)
-const btnRankingCard = document.getElementById("btnRankingCard");
-if (btnRankingCard) {
-    btnRankingCard.addEventListener("click", function(event) {
-        event.preventDefault();
-        abrirRanking();
-    });
-}
-
-btnFechar.addEventListener("click", fecharModal);
-modalFundo.addEventListener("click", fecharModal);
+if (btnFechar) btnFechar.addEventListener("click", fecharModal);
+if (modalFundo) modalFundo.addEventListener("click", fecharModal);
 
 function abrirModal() {
     modal.classList.add("ativo");
@@ -133,30 +139,31 @@ function mostrarPergunta() {
 
     pergunta.alternativas.forEach(function(alternativa, index) {
         alternativasHTML += `
-            <button class="quiz-alternativa" data-index="\${index}">
-                <strong>${String.fromCharCode(65 + index)}.</strong>${alternativa}
+            <button class="quiz-alternativa" data-index="${index}">
+                <strong>${String.fromCharCode(65 + index)}.</strong>
+                ${alternativa}
             </button>
         `;
     });
 
     const linkFonte = pergunta.fonte.startsWith('http') 
         ? pergunta.fonte 
-        : `https://www.google.com/search?q=\${encodeURIComponent(pergunta.fonte)}`;
+        : `https://www.google.com/search?q=${encodeURIComponent(pergunta.fonte)}`;
 
     conteudoModal.innerHTML = `
-        <div class="quiz-status">Pergunta ${perguntaAtual + 1} de${perguntas.length}</div>
-        <div class="barra"><div style="width: \${porcentagem}%"></div></div>
+        <div class="quiz-status">Pergunta ${perguntaAtual + 1} de ${perguntas.length}</div>
+        <div class="barra"><div style="width: ${porcentagem}%"></div></div>
         
         <div class="quiz-pergunta">
-            \${pergunta.pergunta}
+            ${pergunta.pergunta}
             <div style="font-size: 13px; margin-top: 15px; font-weight: normal; font-style: italic;">
-                Fonte: <a href="\${linkFonte}" target="_blank" style="color: #4da6ff; text-decoration: underline; cursor: pointer;">
-                    \${pergunta.fonte}
+                Fonte: <a href="${linkFonte}" target="_blank" style="color: #4da6ff; text-decoration: underline; cursor: pointer;">
+                    ${pergunta.fonte}
                 </a>
             </div>
         </div>
         
-        <div class="quiz-alternativas">\${alternativasHTML}</div>
+        <div class="quiz-alternativas">${alternativasHTML}</div>
     `;
 
     const botoes = document.querySelectorAll(".quiz-alternativa");
@@ -213,9 +220,9 @@ async function mostrarResultado() {
     conteudoModal.innerHTML = `
         <div class="resultado">
             <div class="icone">🏆</div>
-            <h2>Desafio Finalizado, \${nomeJogador}!</h2>
+            <h2>Desafio Finalizado, ${nomeJogador}!</h2>
             <p class="pontos">${pontuacao}/${pontuacaoMaxima}</p>
-            <p>\${mensagem}</p>
+            <p>${mensagem}</p>
             <button class="botao-modal" id="btnVerRankingFinal" style="margin-top: 15px; background-color: #ff9800; color: white;">🏆 VER RANKING GLOBAL</button>
             <br>
             <button class="botao-modal" id="btnJogarNovamente" style="margin-top: 15px;">🔄 JOGAR NOVAMENTE</button>
@@ -258,9 +265,9 @@ async function abrirRanking() {
                 let destaque = (jogador.nome_jogador === nomeJogador) ? 'style="background-color: rgba(255, 215, 0, 0.15); border: 1px solid gold;"' : '';
 
                 resultado += `
-                    <div class="ranking-item" \${destaque}>
-                        <span>${medalha}${jogador.nome_jogador || 'Anónimo'}</span>
-                        <strong>\${jogador.pontos} pts</strong>
+                    <div class="ranking-item" ${destaque}>
+                        <span>${medalha} ${jogador.nome_jogador || 'Anónimo'}</span>
+                        <strong>${jogador.pontos} pts</strong>
                     </div>
                 `;
             });
@@ -277,4 +284,25 @@ async function abrirRanking() {
         console.error("Erro ao carregar ranking:", erro);
         conteudoModal.innerHTML = `
             <h2>❌ Erro</h2>
-            <p>
+            <p>Não foi possível carregar o ranking da base de dados.</p>
+            <button class="botao-modal" id="btnFecharErro">FECHAR</button>
+        `;
+        document.getElementById("btnFecharErro").addEventListener("click", fecharModal);
+    }
+}
+
+async function salvarPontuacao(pontos) {
+    try {
+        await fetch('/api/pontuacao', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome_jogador: nomeJogador, pontos: pontos })
+        });
+    } catch (e) {
+        console.error("Erro ao salvar no banco:", e);
+    }
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") fecharModal();
+});
