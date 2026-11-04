@@ -72,7 +72,7 @@ function comoFunciona() {
     conteudoModal.innerHTML = `
         <h2>ⓘ Como funciona?</h2>
         <p>O Dev Duel é um quiz de programação criado para testar os seus conhecimentos em tecnologia.</p>
-        <p>Cada resposta correta aumenta a sua pontuação e coloca-o no ranking global.</p>
+        <p>Cada resposta correta vale 1 ponto e coloca-o no ranking global.</p>
         <button class="botao-modal" id="btnComecarComoFunciona">COMEÇAR AGORA</button>
     `;
     document.getElementById("btnComecarComoFunciona").addEventListener("click", pedirNome);
@@ -97,7 +97,6 @@ async function iniciarQuiz() {
         const dadosDoBanco = await resposta.json();
 
         let todasAsPerguntas = dadosDoBanco.map(item => {
-            // CORREÇÃO: 'item.alternativas' alterado para 'item.opcoes' e 'texto_alternativa' para 'texto_opcao'
             const indiceCorreta = item.opcoes.findIndex(alt => alt.eh_correta === true);
             const textosAlternativas = item.opcoes.map(alt => alt.texto_opcao);
             return {
@@ -184,7 +183,8 @@ function responder(resposta) {
         if (index === resposta && index !== pergunta.correta) botao.classList.add("errada");
     });
 
-    if (resposta === pergunta.correta) pontuacao += 10;
+    // ALTERAÇÃO: Soma 1 ponto por cada acerto em vez de 10
+    if (resposta === pergunta.correta) pontuacao += 1;
 
     setTimeout(async function() {
         perguntaAtual++;
@@ -202,7 +202,7 @@ async function mostrarResultado() {
     await salvarPontuacao(pontuacao);
 
     let mensagem = "";
-    const pontuacaoMaxima = perguntas.length * 10;
+    const pontuacaoMaxima = perguntas.length; // Máximo de pontos (ex: 10)
 
     if (pontuacao === pontuacaoMaxima) {
         mensagem = "🏆 PERFEITO! Dominou o Dev Duel!";
