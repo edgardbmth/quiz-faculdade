@@ -1,44 +1,53 @@
-# 📚 Projeto Quiz - Trabalho Acadêmico (Dev Duel / Tech Trivia)
+# 📚 Dev Duel (Tech Trivia) — Aplicação Web & Banco de Dados
 
-⚠️ **STATUS: Em Desenvolvimento (Work in Progress)** ⚠️
+✅ **STATUS: Projeto Finalizado & Concluído** ✅
 
-Este repositório contém o código-fonte do **Dev Duel**, uma aplicação web de Quiz interativo desenvolvida para treino e fixação de conhecimentos em Tecnologia da Informação e Concursos Públicos.
-
-**Importante:** Este projeto é um **trabalho de faculdade feito em grupo** e não um projeto individual. Atualmente, a aplicação está em fase de construção e novas funcionalidades estão sendo adicionadas continuamente pela equipe.
+O **Dev Duel** é uma plataforma web interativa de treino, fixação e aprendizado ativo de conceitos de Tecnologia da Informação voltada para estudantes, profissionais e candidatos a Concursos Públicos de TI. O sistema combina gamificação com rigor pedagógico, oferecendo questões no estilo Certo/Errado e múltipla escolha, gabaritos comentados com fundamentação técnica, fontes oficiais para consulta e ranking de pontuações por sessão.
 
 ---
 
 ## 👥 Equipe de Desenvolvimento (Grupo 6)
+
 - **Edgard Aparecido**
 - **Adriano Muniz**
 - **Higor da Silva**
 - **Enzo Moreira**
 - **José Renato Bettuz**
 
----
-
-## 🛠️ Tecnologias Utilizadas
-
-O projeto está sendo desenvolvido utilizando uma arquitetura Full Stack com as seguintes tecnologias:
-
-**Front-end:**
-- HTML5 (15.8%)
-- CSS3 (16.4%)
-- JavaScript Vanilla (33.2%)
-
-**Back-end & Banco de Dados:**
-- Node.js & Express.js
-- Supabase (PostgreSQL - PL/pgSQL 26.6%)
-- Python (8.0%)
-- Render (Hospedagem do servidor)
+**Repositório:** [https://github.com/edgardbmth/quiz-faculdade](https://github.com/edgardbmth/quiz-faculdade)
 
 ---
 
-## 📌 Funcionalidades Principais
-- Lista de perguntas dinâmicas divididas por categorias técnicas.
-- Feedback imediato com gabarito comentado, explicação e link da fonte oficial.
-- Embaralhamento automático de alternativas a cada rodada.
-- Registro e exibição do Top 5 no Ranking da Sessão.
+## 🛠️ Arquitetura e Tecnologias Utilizadas
+
+A aplicação foi desenvolvida em uma arquitetura Full Stack desacoplada com persistência de dados relacional:
+
+* **Front-end:** HTML5, CSS3, JavaScript Vanilla (Interface responsiva, dinâmica e intuitiva).
+* **Back-end & API:** Node.js, Express.js (API RESTful para fornecimento de perguntas, verificação e pontuações).
+* **Banco de Dados:** PostgreSQL (Hospedado no **Supabase**).
+* **Hospedagem & Deploy:** Render (Servidor de Aplicação).
+
+---
+
+## 📌 Principais Funcionalidades
+
+- **Mapeamento por Categorias:** Organização de questões por temas técnicos (ex: *Redes de Computadores*, *Banco de Dados*, *Engenharia de Software*, *Cibersegurança*, etc.).
+- **Embaralhamento Dinâmico:** As alternativas são embaralhadas automaticamente a cada rodada de jogo para evitar a memorização de posições.
+- **Feedback Pedagógico Imediato:** Exibição do gabarito comentado, explicação da resposta e link direto para a fonte oficial (ex: W3C, RFCs, documentações oficiais e acervos históricos).
+- **Flexibilidade no Formato de Opções:** Suporte estrutural a questões com 2 até 5 alternativas sem necessidade de reestruturação do banco.
+- **Ranking da Sessão:** Registro de pontuações de usuários e exibição do Top 5 de pontuações.
+
+---
+
+## 🗄️ Estrutura do Banco de Dados
+
+O banco de dados relacional é composto por 5 tabelas normalizadas (até a 3FN):
+
+1. `categorias`: Armazena os temas e áreas de TI (ex: *História da Computação*, *Arquitetura*, *Redes*).
+2. `perguntas`: Armazena enunciados, contextos, explicações detalhadas e referências da fonte bibliográfica.
+3. `opcoes`: Armazena as alternativas associadas às perguntas, indicando a resposta correta (`eh_correta`).
+4. `usuarios`: Registra os dados do jogador na sessão.
+5. `pontuacoes`: Histórico de pontos acumulados por usuário com *timestamp* da sessão.
 
 ---
 
@@ -46,22 +55,22 @@ O projeto está sendo desenvolvido utilizando uma arquitetura Full Stack com as 
 
 | Método | Rota | Descrição |
 | :--- | :--- | :--- |
-| `GET` | `/api/perguntas` | Lista as perguntas com suas respectivas alternativas. |
-| `POST` | `/api/pontuacao` | Salva a pontuação da sessão do usuário. |
-| `GET` | `/api/ranking` | Traz as 5 melhores pontuações registradas. |
+| `GET` | `/api/perguntas` | Retorna as perguntas cadastradas com suas respectivas alternativas. |
+| `POST` | `/api/pontuacao` | Registra a pontuação obtida pelo jogador na sessão. |
+| `GET` | `/api/ranking` | Retorna as maiores pontuações registradas no ranking. |
 
 ---
 
-## 🚀 Como rodar o projeto localmente
-
-Como o projeto possui um back-end em Node.js e comunicação com um banco de dados no Supabase, é necessário configurar o ambiente local para testá-lo.
+## 🚀 Como Rodar o Projeto Localmente
 
 ### Pré-requisitos
-- [Node.js](https://nodejs.org/) instalado.
-- [Git](https://git-scm.com/) instalado.
+- [Node.js](https://nodejs.org/) (versão 16 ou superior)
+- [Git](https://git-scm.com/)
+- Uma instância do [PostgreSQL](https://www.postgresql.org/) ou conta no [Supabase](https://supabase.com/)
 
 ### Passo a Passo
 
-1. **Clone o repositório:**
+1. **Clonar o Repositório:**
    ```bash
-   git clone [https://github.com/edgardbmth/quiz-faculdade.git](https://github.com/edgardbmth/quiz-faculdade.git)rdbmth/quiz-faculdade.git](https://github.com/edgardbmth/quiz-faculdade.git)
+   git clone [https://github.com/edgardbmth/quiz-faculdade.git](https://github.com/edgardbmth/quiz-faculdade.git)
+   cd quiz-faculdade
