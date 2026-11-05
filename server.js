@@ -13,26 +13,38 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota de perguntas ajustada para evitar erros de Foreign Key no Supabase
+// Rota de perguntas estruturada de forma robusta
 app.get('/api/perguntas', async (req, res) => {
   try {
-    // 1. Busca todas as perguntas
-    const { data: perguntas, error: errPerguntas } = await supabase.from('perguntas').select('*');
-    if (errPerguntas) throw errPerguntas;
+    // Busca todas as perguntas e opções usando as tabelas do projeto
+    const { data: perguntasData, error: errP } = await supabase.from('perguntas').select('*');
+    if (errP) throw errP;
 
-    // 2. Busca todas as opções de resposta
-    const { data: opcoes, error: errOpcoes } = await supabase.from('opcoes').select('*');
-    if (errOpcoes) throw errOpcoes;
+    const { data: opcoesData, error: errO } = await supabase.from('opcoes').select('*');
+    if (errO) throw errO;
 
-    // 3. Combina as opções dentro de cada pergunta correspondente
-    const perguntasComOpcoes = perguntas.map(pergunta => {
+    // Agrupa as opções nas respetivas perguntas com base na chave estrangeira pergunta_id
+    const resultado = perguntasData.map(pergunta => {
+      const opcoesDaPergunta = opcoesData
+        .filter(op => op.pergunta_id === pergunta.id)
+        .map(op => ({
+          id: op.id,
+          texto_opcao: op.texto_opcao,
+          eh_correta: op.eh_correta
+        }));
+
       return {
-        ...pergunta,
-        opcoes: opcoes.filter(opcao => opcao.pergunta_id === pergunta.id)
+        id: pergunta.id,
+        enunciado: pergunta.enunciado,
+        contexto: pergunta.contexto,
+        explicacao: pergunta.explicacao,
+        fonte_nome: pergunta.fonte_nome,
+        fonte_url: pergunta.fonte_url,
+        opcoes: opcoesDaPergunta
       };
     });
 
-    res.json(perguntasComOpcoes);
+    res.json(resultado);
   } catch (error) {
     console.error("Erro ao carregar perguntas:", error.message);
     res.status(500).json({ erro: error.message });
