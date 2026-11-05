@@ -74,3 +74,6 @@ O banco de dados relacional é composto por 5 tabelas normalizadas (até a 3FN):
    ```bash
    git clone [https://github.com/edgardbmth/quiz-faculdade.git](https://github.com/edgardbmth/quiz-faculdade.git)
    cd quiz-faculdade
+
+### LINK WEB SITE
+- (https://quiz-faculdade.onrender.com/#)
