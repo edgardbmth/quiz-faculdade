@@ -13,10 +13,30 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Rota de perguntas ajustada para evitar erros de Foreign Key no Supabase
 app.get('/api/perguntas', async (req, res) => {
-  const { data, error } = await supabase.from('perguntas').select('*, opcoes(*)');
-  if (error) return res.status(500).json({ erro: error.message });
-  res.json(data); 
+  try {
+    // 1. Busca todas as perguntas
+    const { data: perguntas, error: errPerguntas } = await supabase.from('perguntas').select('*');
+    if (errPerguntas) throw errPerguntas;
+
+    // 2. Busca todas as opções de resposta
+    const { data: opcoes, error: errOpcoes } = await supabase.from('opcoes').select('*');
+    if (errOpcoes) throw errOpcoes;
+
+    // 3. Combina as opções dentro de cada pergunta correspondente
+    const perguntasComOpcoes = perguntas.map(pergunta => {
+      return {
+        ...pergunta,
+        opcoes: opcoes.filter(opcao => opcao.pergunta_id === pergunta.id)
+      };
+    });
+
+    res.json(perguntasComOpcoes);
+  } catch (error) {
+    console.error("Erro ao carregar perguntas:", error.message);
+    res.status(500).json({ erro: error.message });
+  }
 });
 
 app.post('/api/pontuacao', async (req, res) => {
