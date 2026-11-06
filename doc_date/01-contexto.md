@@ -2,7 +2,7 @@
 
 ## 1. Introdução e contexto
 
-O Dev Duel é uma plataforma web interativa de treino e fixação de conhecimentos, voltada para profissionais, estudantes e entusiastas da área de Tecnologia da Informação. Através de uma abordagem de gamificação, o sistema transforma o estudo de conceitos técnicos complexos (como arquitetura de sistemas, redes, algoritmos, banco de dados e DevOps) em uma experiência estimulante e dinâmica. O objetivo deste banco de dados é armazenar e gerenciar de forma estruturada as questões técnicas, categorias da tecnologia, alternativas de resposta (estilo Certo/Errado ou múltipla escolha), explicações pedagógicas e links de fontes bibliográficas oficiais, disponibilizando estes dados por meio de uma API REST para consumo pelo front-end da aplicação.
+O Dev Duel é uma plataforma web interativa de treino e fixação de conhecimentos, voltada para profissionais, estudantes e entusiastas da área de Tecnologia da Informação. Através de uma abordagem de gamificação, o sistema transforma o estudo de conceitos técnicos complexos em uma experiência estimulante e dinâmica. O objetivo deste banco de dados é armazenar e gerenciar de forma estruturada as questões técnicas, categorias da tecnologia, alternativas de resposta (estilo Certo/Errado ou múltipla escolha), explicações pedagógicas e links de fontes bibliográficas oficiais, disponibilizando estes dados por meio de uma API REST para consumo pelo front-end da aplicação.
 
 | O banco faz | O banco não faz |
 | --- | --- |
@@ -18,9 +18,11 @@ O Dev Duel é uma plataforma web interativa de treino e fixação de conheciment
 
 ## 2. Minimundo
 
-Somos uma plataforma de preparação para concursos públicos de TI e queremos um sistema interativo gamificado para estimular o estudo e o aprendizado ativo dos candidatos. Cada pergunta armazenada possui um enunciado técnico baseado em provas oficiais, pertence a uma única categoria temática (como "Hardware e Arquitetura", "Redes de Computadores" ou "Lógica de Programação") e conta com uma explicação detalhada do gabarito oficial, acompanhada por um link de referência bibliográfica para aprofundamento do tema.
+omos uma plataforma interativa de estudo em tecnologia e queremos um sistema gamificado para estimular o aprendizado ativo de estudantes e entusiastas da área. Cada pergunta armazenada possui um enunciado técnico focado em linguagens e fundamentos de computação (como SQL, HTML, Linguagem C, JavaScript e Curiosidades de TI), pertence a uma única categoria temática e conta com uma explicação detalhada do gabarito oficial, acompanhada por um link de referência bibliográfica (como documentações oficiais) para aprofundamento do tema.
 
-Para garantir a dinamicidade das partidas e evitar a simples memorização da posição das opções, cada pergunta disponibiliza alternativas de múltipla escolha que são embaralhadas aleatoriamente a cada rodada. O modelo padrão utiliza até 5 alternativas por questão, permitindo também suportar 2 ou 4 opções sem alterar a estrutura das tabelas. Cada alternativa possui seu texto e um indicador lógico (`eh_correta`) que define a resposta certa. Antes de iniciar a rodada, o jogador informa seu nome para identificação no jogo. Durante a partida, a aplicação valida as respostas enviadas, contabiliza os pontos obtidos, exibe o feedback pedagógico com a justificativa técnica e atualiza a tabela de classificação (Ranking da Sessão).
+Para garantir a dinamicidade das partidas e evitar a simples memorização da posição das opções, cada pergunta disponibiliza alternativas que podem ser estruturadas em formato de múltipla escolha ou binário (Certo/Errado). Cada alternativa possui seu texto e um indicador lógico (`eh_correta`) que define a resposta certa. Antes de iniciar a rodada, o jogador informa seu nome para identificação no jogo. Durante a partida, a aplicação valida as respostas enviadas, contabiliza os pontos obtidos, exibe o feedback pedagógico com a justificativa técnica e atualiza a tabela de classificação (Ranking da Sessão).
+
+## 3. Requisitos e regras de negócio
 
 ## 3. Requisitos e regras de negócio
 
