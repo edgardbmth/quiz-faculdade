@@ -23,9 +23,6 @@ Somos uma plataforma interativa de estudo em tecnologia e queremos um sistema ga
 Para garantir a dinamicidade das partidas e evitar a simples memorização da posição das opções, cada pergunta disponibiliza alternativas que podem ser estruturadas em formato de múltipla escolha ou binário (Certo/Errado). Cada alternativa possui seu texto e um indicador lógico (`eh_correta`) que define a resposta certa. Antes de iniciar a rodada, o jogador informa seu nome para identificação no jogo. Durante a partida, a aplicação valida as respostas enviadas, contabiliza os pontos obtidos, exibe o feedback pedagógico com a justificativa técnica e atualiza a tabela de classificação (Ranking da Sessão).
 
 ## 3. Requisitos e regras de negócio
-
-## 3. Requisitos e regras de negócio
-
 ### Requisitos Funcionais (RF)
 | Código | Descrição do Requisito Funcional | Tipo |
 | :--- | :--- | :--- |
