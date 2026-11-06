@@ -39,4 +39,31 @@ INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES
 (4, 'Certo', TRUE),
 (4, 'Errado', FALSE);
 
+
+INSERT INTO perguntas (id, categoria_id, enunciado, contexto, explicacao, fonte_nome, fonte_url) VALUES 
+(5, 2, 'O comando SQL DROP TABLE exclui a estrutura de uma tabela e todos os seus dados permanentemente.', 'Manipulação de estruturas de dados em bancos relacionais.', 'Correto. O DROP TABLE remove completamente a tabela e seus registros do banco de dados.', 'Guia de Referência SQL', 'https://www.postgresql.org/docs/manual/'),
+
+(6, 2, 'A primeira forma normal (1FN) exige que os atributos de uma tabela contenham valores atômicos e indivisíveis.', 'Normalização de banco de dados e eliminação de grupos repetitivos.', 'Correto. A 1FN determina que cada coluna deve conter apenas valores atômicos.', 'Fundamentos de Banco de Dados', 'https://www.postgresql.org/docs/manual/'),
+
+(7, 1, 'O protocolo DHCP é utilizado para a atribuição dinâmica de endereços IP aos dispositivos em uma rede.', 'Serviços e protocolos de configuração de rede.', 'Correto. O DHCP automatiza a distribuição de endereços IP, máscara de sub-rede e gateway.', 'Redes de Computadores - Tanenbaum', 'https://www.pearson.com/redes'),
+
+(8, 1, 'Os endereços do protocolo IPv4 possuem um tamanho total de 64 bits.', 'Estudo do endereçamento IP nas redes de computadores.', 'Errado. O IPv4 possui 32 bits de comprimento, enquanto o IPv6 possui 128 bits.', 'Redes de Computadores - Tanenbaum', 'https://www.pearson.com/redes');
+
+INSERT INTO opcoes (pergunta_id, texto_opcao, eh_correta) VALUES 
+-- Pergunta 5 (Gabarito: Certo)
+(5, 'Certo', TRUE),
+(5, 'Errado', FALSE),
+
+-- Pergunta 6 (Gabarito: Certo)
+(6, 'Certo', TRUE),
+(6, 'Errado', FALSE),
+
+-- Pergunta 7 (Gabarito: Certo)
+(7, 'Certo', TRUE),
+(7, 'Errado', FALSE),
+
+-- Pergunta 8 (Gabarito: Errado)
+(8, 'Certo', FALSE),
+(8, 'Errado', TRUE);
+
 COMMIT;
